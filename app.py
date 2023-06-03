@@ -1,12 +1,14 @@
-from flask import Flask
-from flask import request
-from flask import render_template
+from flask import Flask,request,render_template,session
 # from user import user
-import sqlite3
+import sqlite3,os
+from dotenv import load_dotenv
 app = Flask(__name__)
 conn = sqlite3.connect('data/password_manager.db')
 c=conn.cursor()
-login_user={}
+# 讀取 .env 檔案
+load_dotenv()
+# 使用環境變數
+app.secret_key = os.getenv('SECRET_KEY')
 # closs
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -24,12 +26,12 @@ def login():
         return False
     # 
     error=""
-    user_mail=request.form['user_mail']
-    password=request.form['password']
     if request.method=="POST":
+        user_mail=request.form['user_mail']
+        password=request.form['password']
         if check(user_mail,password):
-            login_user[user_mail]=user.search(user_mail)
-            return render_template("home.html", login_user[user_mail].name,login_user[user_mail].get())
+            session[user_mail]=user.search(user_mail)
+            return render_template("home.html", session[user_mail].name,session[user_mail].get())
         else:
             error="無效的使用者名稱/密碼"
     return render_template('login.html',error=error)
@@ -81,10 +83,10 @@ def register():
         elif user_name=="":
             error="使用者名稱不得空白"
         else:
-            login_user[request.form['user_mail']]=user(name=request.form['user_name'])
+            session[request.form['user_mail']]=user(name=request.form['user_name'])
             insert_Users(request.form['user_mail'],request.form['password'])
             add_table(request.form['user_mail'])
-            return render_template("home.html", login_user[request.form['user_mail']].name)
+            return render_template("home.html", session[request.form['user_mail']].name)
     return render_template('register.html',error=error)
     
 # 
@@ -93,16 +95,29 @@ def register():
 def home():
     if 'button_edit' in request.form:
         return render_template('edit.html',request.form['keyword'],request.form['account_id'],request.form['account_password'])
+    elif 'button_add' in request.form:
+        return render_template('add.html')
+    elif 'button_delete' in request.form:
+        user_info=session.get("user_mail")
+        user_info.delete()
+        return render_template("home.html", user_info.name,user_info.get())
 
-@app.route('/edit', methods=['POST', 'GET'])
+
+@app.route('/edit', methods=['POST'])
 def edit():
+    user_info=session.get("user_mail")
     if request.method=="POST":
-        login_user[request.form['user_mail']].edit(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        user_info.edit(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        return render_template("home.html", user_info.name,user_info.get())
 
-@app.route('/add', methods=['POST', 'GET'])
+@app.route('/add', methods=['POST'])
 def add():
+    user_info=session.get("user_mail")
     if request.method=="POST":
-        login_user[request.form['user_mail']].add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        user_info.add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        return render_template("home.html", user_info.name,user_info.get())
+
+
 
 
     
