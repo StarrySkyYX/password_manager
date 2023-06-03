@@ -2,6 +2,8 @@ from flask import Flask,request,render_template,session
 from user import User
 import os
 from dotenv import load_dotenv
+import atexit
+
 app = Flask(__name__)
 # 讀取 .env 檔案
 load_dotenv()
@@ -63,7 +65,10 @@ def home():
     elif 'search' in request.form:
         user_info=session.get("user_mail")
         return render_template("home.html", user_info.name,user_info.search(request.form['search'],))
-
+    elif 'button_logout' in request.form:
+        session.clear()
+        return render_template("index.html")
+    
 @app.route('/edit', methods=['POST'])
 def edit():
     user_info=session.get("user_mail")
@@ -81,6 +86,12 @@ def add():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+def clear_session():
+    session.clear()
+
+atexit.register(clear_session)
+
 
 
 
