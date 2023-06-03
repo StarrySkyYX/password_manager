@@ -29,7 +29,7 @@ def login():
     if request.method=="POST":
         if check(user_mail,password):
             login_user[user_mail]=user.search(user_mail)
-            return render_template("home.html", login_user[user_mail].name)
+            return render_template("home.html", login_user[user_mail].name,login_user[user_mail].get())
         else:
             error="無效的使用者名稱/密碼"
     return render_template('login.html',error=error)
@@ -88,9 +88,23 @@ def register():
     return render_template('register.html',error=error)
     
 # 
+# 因不知道Button和RadioButton在request.form所儲存的key-value，因此向chatGPT詢問 
+@app.route('/home', methods=['POST'])
+def home():
+    if 'button_edit' in request.form:
+        return render_template('edit.html',request.form['keyword'],request.form['account_id'],request.form['account_password'])
+
 @app.route('/edit', methods=['POST', 'GET'])
 def edit():
-    
+    if request.method=="POST":
+        login_user[request.form['user_mail']].edit(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+
+@app.route('/add', methods=['POST', 'GET'])
+def add():
+    if request.method=="POST":
+        login_user[request.form['user_mail']].add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+
+
     
 
 if __name__ == '__main__':
