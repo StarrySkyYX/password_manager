@@ -27,7 +27,7 @@ def login():
             error="無效的使用者名稱/密碼"
     return render_template('login.html',error=error)
 # 
-@app.route('/register', methods=['POST', 'GET'])
+@app.route('/websites/register.html', methods=['POST', 'GET'])
 def register():
     # 一開始if語句嵌套過多層，可讀性差，詢問chatGPT解決辦法，他提議以elif來改善
     error=""
