@@ -3,9 +3,9 @@ import atexit
 conn = sqlite3.connect('data/password_manager.db')
 cursor=conn.cursor()
 # gpt
-def close_db_conn():
-    conn.close()
-atexit.register(close_db_conn)
+# def close_db_conn():
+#     conn.close()
+# atexit.register(close_db_conn)
 
 class User:
     name=""
