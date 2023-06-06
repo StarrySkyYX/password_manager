@@ -2,7 +2,7 @@ from flask import Flask,request,render_template,session
 from user import User
 import os
 from dotenv import load_dotenv
-import atexit
+import atexit,json
 
 app = Flask(__name__)
 # 讀取 .env 檔案
@@ -22,8 +22,9 @@ def login():
         password=request.form['password']
         if User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
-            user_info=session[user_mail].load()
-            return render_template("/websites/home.html",user_name=session[user_mail].name,user_info=user_info)
+            user_name=session[user_mail].name
+            user_info=json.dumps(User.load(user_name))
+            return render_template("/websites/home.html",user_name=user_name,user_info=user_info)
         else:
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
@@ -88,6 +89,8 @@ def add():
     if request.method=="POST":
         user.add(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
         return render_template("/websites/home.html", user_name=user.name,user_info=user.load())
+    
+
 
 
 if __name__ == '__main__':
