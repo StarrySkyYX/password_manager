@@ -58,6 +58,8 @@ class User:
     
     @staticmethod
     def check_mail_exist(user_mail):
+        conn = sqlite3.connect('data/password_manager.db')
+        cursor=conn.cursor()
         # 定義查詢語句和佔位符
         query = '''SELECT mail FROM Users WHERE mail LIKE ?'''
         # 執行查詢，將具體值綁定到佔位符
@@ -68,6 +70,8 @@ class User:
     
     @staticmethod
     def check_name_exist(user_name):
+        conn = sqlite3.connect('data/password_manager.db')
+        cursor=conn.cursor()
         # 定義查詢語句和佔位符
         query = '''SELECT name FROM Users WHERE name LIKE ?'''
         # 執行查詢，將具體值綁定到佔位符
