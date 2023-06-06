@@ -18,7 +18,7 @@ class User:
         query='''SELECT name FROM Users WHERE mail=?'''
         self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
 
-        
+    
 
     def search(self,search_str):
         rows=self.load()
@@ -27,7 +27,6 @@ class User:
                 return row
     
    
-
     def load(self):
         conn = sqlite3.connect('data/password_manager.db')
         cursor = conn.cursor()
@@ -41,8 +40,7 @@ class User:
                 'id':row_tuple[1],
                 'password':row_tuple[2]
                                 })
-        json_data = json.dumps(result)
-        return json_data
+        return result
         
     
     def delete(self,delete_keyword):
@@ -128,4 +126,4 @@ class User:
         '''.replace('table_name',user_name)
         cursor.execute(add_sql_table)
         conn.commit()
-
+    
