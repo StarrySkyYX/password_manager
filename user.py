@@ -18,6 +18,13 @@ class User:
         result=cursor.execute(query, (user_mail,)).fetchall()
         self.name=result[0]
 
+    def __init__(self,user_mail,user_name):
+        conn = sqlite3.connect('data/password_manager.db')
+        cursor=conn.cursor()
+        self.mail=user_mail
+        self.name=user_name
+
+
     def search(self,search_str):
         rows=self.load
         for row in rows:
