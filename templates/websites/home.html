@@ -17,7 +17,7 @@
             <ul class="navbar-nav ms-auto">
                 <form method="post">
                     <li class="nav-item">
-                        <a href="../" target="_top"><button class="btn btn-secondary ms-lg-2" type="submit" value="button_logout">登出</button></a>
+                        <button class="btn btn-secondary ms-lg-2" type="submit" value="button_logout">登出</button>
                     </li>
                 </form>
             </ul>
@@ -31,8 +31,9 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-primary me-2" onclick="editUser()">編輯</button>
-                <button type="button" class="btn btn-primary" onclick="saveUser()">完成</button>
+                <button type="button" class="btn btn-primary" id="editButton" onclick="editUser()">編輯</button>
+                <button type="button" class="btn btn-primary d-none" id="saveButton" onclick="saveUser()">完成</button>
+                <button type="button" class="btn btn-primary" id="saveButton" onclick="addUser()">新增</button>
             </div>
         </div>
         <div class="row mt-4">
@@ -47,23 +48,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        // 使用PHP连接数据库
-                        $db = new SQLite3('database.db');
-
-                        // 查询数据库中的信息
-                        $result = $db->query('SELECT * FROM users');
-
-                        // 循环遍历结果集
-                        while ($row = $result->fetchArray()) {
-                            echo '<tr>';
-                            echo '<td><input type="radio" name="edit-radio"></td>';
-                            echo '<td>' . $row['name'] . '</td>';
-                            echo '<td>' . $row['account'] . '</td>';
-                            echo '<td>' . $row['password'] . '</td>';
-                            echo '</tr>';
-                        }
-                        ?>
+                        <tr>
+                            <td><input type="radio" name="edit-radio" checked></td>
+                            <td><span id="name">John Doe</span><input type="text" class="form-control d-none" id="edit_name"></td>
+                            <td><span id="account">johndoe123</span><input type="text" class="form-control d-none" id="edit_account"></td>
+                            <td><span id="password">123</span><input type="text" class="form-control d-none" id="edit_password"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="edit-radio"></td>
+                            <td><span id="name">Peggy</span><input type="text" class="form-control d-none" id="edit_name"></td>
+                            <td><span id="account">peggy123</span><input type="text" class="form-control d-none" id="edit_account"></td>
+                            <td><span id="password">123</span><input type="text" class="form-control d-none" id="edit_password"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -72,45 +68,92 @@
 
     <script>
         function editUser() {
+            // 隐藏编辑、新增按钮，显示完成按钮
+            document.getElementById('editButton').classList.add('d-none');
+            document.getElementById('addButton').classList.add('d-none');
+            document.getElementById('saveButton').classList.remove('d-none');
+
             // 获取所有单选按钮元素
             const radioButtons = document.querySelectorAll('input[name="edit-radio"]');
-            
-            // 遍历单选按钮，检查哪个被选中
-            radioButtons.forEach(function(radioButton) {
-                if (radioButton.checked) {
-                    // 获取当前行的单元格
-                    const cells = radioButton.parentElement.parentElement.cells;
 
-                    // 隐藏文字，显示输入框
+            // 遍历所有行
+            radioButtons.forEach(function (radioButton) {
+                // 获取当前行的单元格
+                const cells = radioButton.parentElement.parentElement.cells;
+
+                // 检查单选按钮是否被选中
+                if (radioButton.checked) {
+                    // 显示文字，隐藏第一列的单选按钮
+                    cells[0].querySelector('input').classList.add('d-none');
+
+                    // 显示输入框
                     for (let i = 1; i < cells.length; i++) {
-                        cells[i].querySelector('span').classList.add('d-none');
-                        cells[i].querySelector('input').classList.remove('d-none');
-                        cells[i].querySelector('input').value = cells[i].querySelector('span').textContent;
+                        const spanElement = cells[i].querySelector('span');
+                        spanElement.classList.add('d-none');
+                        const inputElement = cells[i].querySelector('input');
+                        inputElement.classList.remove('d-none');
+                        inputElement.value = spanElement.textContent;
+                    }
+                } else {
+                    // 隐藏第一列的单选按钮
+                    cells[0].querySelector('input').classList.add('d-none');
+
+                    // 隐藏输入框，显示文字
+                    for (let i = 1; i < cells.length; i++) {
+                        const spanElement = cells[i].querySelector('span');
+                        spanElement.classList.remove('d-none');
+                        const inputElement = cells[i].querySelector('input');
+                        inputElement.classList.add('d-none');
                     }
                 }
             });
         }
 
         function saveUser() {
+            // 隐藏完成按钮，显示编辑按钮
+            document.getElementById('saveButton').classList.add('d-none');
+            document.getElementById('editButton').classList.remove('d-none');
+            document
+
             // 获取所有单选按钮元素
             const radioButtons = document.querySelectorAll('input[name="edit-radio"]');
-            
-            // 遍历单选按钮，检查哪个被选中
-            radioButtons.forEach(function(radioButton) {
-                if (radioButton.checked) {
-                    // 获取当前行的单元格
-                    const cells = radioButton.parentElement.parentElement.cells;
 
-                    // 显示文字，隐藏输入框
+            // 遍历所有行
+            radioButtons.forEach(function (radioButton) {
+                // 获取当前行的单元格
+                const cells = radioButton.parentElement.parentElement.cells;
+
+                // 检查单选按钮是否被选中
+                if (radioButton.checked) {
+                    // 显示第一列的单选按钮
+                    cells[0].querySelector('input').classList.remove('d-none');
+
+                    // 隐藏输入框，显示文字
                     for (let i = 1; i < cells.length; i++) {
-                        cells[i].querySelector('span').classList.remove('d-none');
-                        cells[i].querySelector('input').classList.add('d-none');
-                        cells[i].querySelector('span').textContent = cells[i].querySelector('input').value;
+                        const spanElement = cells[i].querySelector('span');
+                        spanElement.classList.remove('d-none');
+                        const inputElement = cells[i].querySelector('input');
+                        inputElement.classList.add('d-none');
+                        spanElement.textContent = inputElement.value;
+                    }
+                } else {
+                    // 显示第一列的单选按钮
+                    cells[0].querySelector('input').classList.remove('d-none');
+
+                    // 隐藏输入框，显示文字
+                    for (let i = 1; i < cells.length; i++) {
+                        const spanElement = cells[i].querySelector('span');
+                        spanElement.classList.remove('d-none');
+                        const inputElement = cells[i].querySelector('input');
+                        inputElement.classList.add('d-none');
                     }
                 }
             });
         }
+
+        function addUser() {
+
+        }
     </script>
 </body>
-
 </html>
