@@ -22,9 +22,7 @@ def login():
         password=request.form['password']
         if User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
-            user_name=session[user_mail].name
-            user_info=session[user_mail].load()
-            return render_template("/websites/home.html",user_name=user_name,user_info=user_info)
+            return render_template("/websites/home.html",user_name=session[user_mail].name,user_info=session[user_mail].load())
         else:
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
@@ -54,7 +52,7 @@ def register():
             User.add_table(user_name)
             User.insert_user(user_mail,password,user_name)
             session[user_mail]=User(user_mail)
-            return render_template("/websites/home.html", session[user_mail].name,session[user_mail].load())
+            return render_template("/websites/home.html", user_name=session[user_mail].name,user_info=session[user_mail].load())
     return render_template('/websites/register.html',error=error)
     
 # 
@@ -68,27 +66,27 @@ def home():
     elif 'button_delete' in request.form:
         user_object=session.get("user_mail")
         user_object.delete(request.form['keyword'])
-        return render_template("/websites/home.html", user_object.name,user_object.load())
+        return render_template("/websites/home.html", user_name=user_object.name,user_info=user_object.load())
     elif 'search' in request.form:
         user_object=session.get("user_mail")
-        return render_template("/websites/home.html", user_object.name,user_object.search(request.form['search'],))
+        return render_template("/websites/home.html", user_name=user_object.name,user_info=user_object.search(request.form['search'],))
     elif 'button_logout' in request.form:
         session.clear()
         return render_template("index.html")
     
 @app.route('/websites/home', methods=['POST'])
 def edit():
-    user_info=session.get("user_mail")
+    user=session.get("user_mail")
     if request.method=="POST":
-        user_info.edit(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
-        return render_template("/websites/home.html", user_info.name,user_info.load())
+        user.edit(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
+        return render_template("/websites/home.html", user_name=user.name,user_info=user.load())
 
 @app.route('/websites/add', methods=['POST'])
 def add():
-    user_info=session.get("user_mail")
+    user=session.get("user_mail")
     if request.method=="POST":
-        user_info.add(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
-        return render_template("/websites/home.html", user_info.name,user_info.load())
+        user.add(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
+        return render_template("/websites/home.html", user_name=user.name,user_info=user.load())
 
 
 if __name__ == '__main__':
