@@ -20,7 +20,7 @@ def login():
     if request.method=="POST":
         user_mail=request.form['user_mail']
         password=request.form['password']
-        if User.check_login(user_mail,password):
+        if not User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
             return render_template("home.html", session[user_mail].name,session[user_mail].load())
         else:
@@ -49,9 +49,9 @@ def register():
         elif user_name=="":
             error="使用者名稱不得空白"
         else:
-            session[user_mail]=User(user_mail)
-            User.insert_user(user_mail,password,user_name)
             User.add_table(user_name)
+            User.insert_user(user_mail,password,user_name)
+            session[user_mail]=User(user_mail,user_name)
             return render_template("/websites/home.html", session[user_mail].name,session[user_mail].load())
     return render_template('/websites/register.html',error=error)
     
