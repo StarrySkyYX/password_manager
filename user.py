@@ -14,23 +14,22 @@ class User:
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         self.mail=user_mail
-        query='''SELECT name FROM Users WHERE mail LIKE ?'''
-        self.name=cursor.execute(query, (user_mail,)).fetchone()
-
+        query='''SELECT name FROM Users WHERE mail=?'''
+        self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
+        
 
     def search(self,search_str):
-        rows=self.load
+        rows=self.load()
         for row in rows:
             if row['name']==search_str:
                 return row
 
     def load(self):
         conn = sqlite3.connect('data/password_manager.db')
-        cursor=conn.cursor()
-        query='''SELECT * FROM table_name'''.replace('table_name',self.name)
+        cursor = conn.cursor()
+        query = '''SELECT * FROM {}'''.format(self.name)
         cursor.execute(query)
-        rows=cursor.fetchall()
-        # 詢問如何把搜尋結果轉成字典
+        rows = cursor.fetchall()
         return [dict(row) for row in rows]
        
     
@@ -64,10 +63,10 @@ class User:
         cursor=conn.cursor()
         # 定義查詢語句和佔位符
         query = '''SELECT password FROM Users WHERE mail LIKE ?'''
-        # 執行查詢，將具體值綁定到佔位符
-        cursor.execute(query, (user_mail,))
-        # 獲取查詢結果
-        check_password =(cursor.fetchone())
+        result=cursor.execute(query, (user_mail,)).fetchall()
+        if len(result)==0:
+            return False
+        check_password =''.join(result[0])
         if check_password==password:
             return True
         return False
