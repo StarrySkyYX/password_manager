@@ -14,7 +14,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 def load_index():
     return render_template('index.html')
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/websites/login.html', methods=['POST', 'GET'])
 def login():
     error=""
     if request.method=="POST":
