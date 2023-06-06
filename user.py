@@ -1,5 +1,6 @@
 import sqlite3
 import atexit
+import json
 conn = sqlite3.connect('data/password_manager.db')
 cursor=conn.cursor()
 # gpt
@@ -30,7 +31,7 @@ class User:
         query = '''SELECT * FROM {}'''.format(self.name)
         cursor.execute(query)
         rows = cursor.fetchall()
-        return [dict(row) for row in rows]
+        return json.load([dict(row) for row in rows])
        
     
     def delete(self,delete_keyword):
