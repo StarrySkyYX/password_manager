@@ -17,6 +17,7 @@ class User:
         self.mail=user_mail
         query='''SELECT name FROM Users WHERE mail=?'''
         self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
+
         
 
     def search(self,search_str):
@@ -24,6 +25,8 @@ class User:
         for row in rows:
             if row['name']==search_str:
                 return row
+    
+   
 
     def load(self):
         conn = sqlite3.connect('data/password_manager.db')
@@ -31,8 +34,16 @@ class User:
         query = '''SELECT * FROM {}'''.format(self.name)
         cursor.execute(query)
         rows = cursor.fetchall()
-        return json.load([dict(row) for row in rows])
-       
+        result=[]
+        for row_tuple in rows:
+            result.append({
+                'name':row_tuple[0],
+                'id':row_tuple[1],
+                'password':row_tuple[2]
+                                })
+        json_data = json.dumps(result)
+        return json_data
+        
     
     def delete(self,delete_keyword):
         conn = sqlite3.connect('data/password_manager.db')
