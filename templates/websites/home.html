@@ -34,126 +34,178 @@
             <div class="col-12">
                 <button type="button" class="btn btn-primary" id="editButton" onclick="editUser()">編輯</button>
                 <button type="button" class="btn btn-primary d-none" id="saveButton" onclick="saveUser()">完成</button>
-                <button type="button" class="btn btn-primary" id="saveButton" onclick="addUser()">新增</button>
+                <button type="button" class="btn btn-primary" id="addButton" onclick="addUser()">新增</button>
+                <button type="button" class="btn btn-danger" id="deleteButton" onclick="deleteUser()">刪除</button>
             </div>
         </div>
         <div class="row mt-4">
             <div class="col-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>姓名</th>
-                            <th>帳號</th>
-                            <th>密碼</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="radio" name="edit-radio" checked></td>
-                            <td><span id="name">John Doe</span><input type="text" class="form-control d-none" id="edit_name"></td>
-                            <td><span id="account">johndoe123</span><input type="text" class="form-control d-none" id="edit_account"></td>
-                            <td><span id="password">123</span><input type="text" class="form-control d-none" id="edit_password"></td>
-                        </tr>
-                        <tr>
-                            <td><input type="radio" name="edit-radio"></td>
-                            <td><span id="name">Peggy</span><input type="text" class="form-control d-none" id="edit_name"></td>
-                            <td><span id="account">peggy123</span><input type="text" class="form-control d-none" id="edit_account"></td>
-                            <td><span id="password">123</span><input type="text" class="form-control d-none" id="edit_password"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <form id="userForm">
+                    <table class="table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>姓名</th>
+                                <th>帳號</th>
+                                <th>密碼</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 表格内容将通过 JavaScript 动态生成 -->
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
+        // 假设您有一个 JSON 文件，其内容如下：
+        var jsonData = [
+            {
+                "姓名": "John Doe",
+                "帳號": "johndoe123",
+                "密碼": "123"
+            },
+            {
+                "姓名": "Peggy",
+                "帳號": "peggy123",
+                "密碼": "123"
+            }
+        ];
+
+        // 在页面加载完成后执行以下操作
+        $(document).ready(function () {
+            // 获取表格的 tbody 元素
+            var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+
+            for (var i = 0; i < jsonData.length; i++) {
+                // 创建新的表格行
+                var row = tableBody.insertRow(i);
+
+                // 创建单元格并设置单元格内容
+                var radioCell = row.insertCell(0);
+                // 为第一个单元格的单选按钮添加属性 checked
+                radioCell.innerHTML = '<input type="radio" name="edit-radio" ' + (i === 0 ? 'checked' : '') + '>';
+
+                var nameCell = row.insertCell(1);
+                nameCell.innerHTML = '<span>' + jsonData[i].姓名 + '</span><input type="text" class="form-control d-none" name="edit_name">';
+
+                var accountCell = row.insertCell(2);
+                accountCell.innerHTML = '<span>' + jsonData[i].帳號 + '</span><input type="text" class="form-control d-none" name="edit_account">';
+
+                var passwordCell = row.insertCell(3);
+                passwordCell.innerHTML = '<span>' + jsonData[i].密碼 + '</span><input type="text" class="form-control d-none" name="edit_password">';
+            }
+        });
+
         function editUser() {
-            // 隐藏编辑、新增按钮，显示完成按钮
+            // 禁用所有单选按钮
+            var radioButtons = document.getElementsByName('edit-radio');
+            for (var i = 0; i < radioButtons.length; i++) {
+                radioButtons[i].disabled = true;
+            }
+
+            var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
+            var nameCell = selectedRow.cells[1];
+            var accountCell = selectedRow.cells[2];
+            var passwordCell = selectedRow.cells[3];
+
+            // 显示输入框并将内容设置为当前值
+            nameCell.querySelector('span').classList.add('d-none');
+            nameCell.querySelector('input').classList.remove('d-none');
+            nameCell.querySelector('input').value = nameCell.querySelector('span').textContent;
+
+            accountCell.querySelector('span').classList.add('d-none');
+            accountCell.querySelector('input').classList.remove('d-none');
+            accountCell.querySelector('input').value = accountCell.querySelector('span').textContent;
+
+            passwordCell.querySelector('span').classList.add('d-none');
+            passwordCell.querySelector('input').classList.remove('d-none');
+            passwordCell.querySelector('input').value = passwordCell.querySelector('span').textContent;
+
+            // 隐藏编辑按钮，显示完成按钮
             document.getElementById('editButton').classList.add('d-none');
             document.getElementById('addButton').classList.add('d-none');
+            document.getElementById('deleteButton').classList.add('d-none');
             document.getElementById('saveButton').classList.remove('d-none');
-
-            // 获取所有单选按钮元素
-            const radioButtons = document.querySelectorAll('input[name="edit-radio"]');
-
-            // 遍历所有行
-            radioButtons.forEach(function (radioButton) {
-                // 获取当前行的单元格
-                const cells = radioButton.parentElement.parentElement.cells;
-
-                // 检查单选按钮是否被选中
-                if (radioButton.checked) {
-                    // 显示文字，隐藏第一列的单选按钮
-                    cells[0].querySelector('input').classList.add('d-none');
-
-                    // 显示输入框
-                    for (let i = 1; i < cells.length; i++) {
-                        const spanElement = cells[i].querySelector('span');
-                        spanElement.classList.add('d-none');
-                        const inputElement = cells[i].querySelector('input');
-                        inputElement.classList.remove('d-none');
-                        inputElement.value = spanElement.textContent;
-                    }
-                } else {
-                    // 隐藏第一列的单选按钮
-                    cells[0].querySelector('input').classList.add('d-none');
-
-                    // 隐藏输入框，显示文字
-                    for (let i = 1; i < cells.length; i++) {
-                        const spanElement = cells[i].querySelector('span');
-                        spanElement.classList.remove('d-none');
-                        const inputElement = cells[i].querySelector('input');
-                        inputElement.classList.add('d-none');
-                    }
-                }
-            });
         }
 
         function saveUser() {
-            // 隐藏完成按钮，显示编辑按钮
-            document.getElementById('saveButton').classList.add('d-none');
+            // 恢复所有单选按钮的状态
+            var radioButtons = document.getElementsByName('edit-radio');
+            for (var i = 0; i < radioButtons.length; i++) {
+                radioButtons[i].disabled = false;
+            }
+
+            var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
+            var nameCell = selectedRow.cells[1];
+            var accountCell = selectedRow.cells[2];
+            var passwordCell = selectedRow.cells[3];
+
+            // 获取输入框的值并设置为新的内容
+            var newName = nameCell.querySelector('input').value;
+            var newAccount = accountCell.querySelector('input').value;
+            var newPassword = passwordCell.querySelector('input').value;
+
+            nameCell.querySelector('span').textContent = newName;
+            accountCell.querySelector('span').textContent = newAccount;
+            passwordCell.querySelector('span').textContent = newPassword;
+
+            // 隐藏输入框，显示文本内容
+            nameCell.querySelector('span').classList.remove('d-none');
+            nameCell.querySelector('input').classList.add('d-none');
+
+            accountCell.querySelector('span').classList.remove('d-none');
+            accountCell.querySelector('input').classList.add('d-none');
+
+            passwordCell.querySelector('span').classList.remove('d-none');
+            passwordCell.querySelector('input').classList.add('d-none');
+
+            // 隐藏完成按钮，显示编辑、新增和删除按钮
             document.getElementById('editButton').classList.remove('d-none');
-            document
-
-            // 获取所有单选按钮元素
-            const radioButtons = document.querySelectorAll('input[name="edit-radio"]');
-
-            // 遍历所有行
-            radioButtons.forEach(function (radioButton) {
-                // 获取当前行的单元格
-                const cells = radioButton.parentElement.parentElement.cells;
-
-                // 检查单选按钮是否被选中
-                if (radioButton.checked) {
-                    // 显示第一列的单选按钮
-                    cells[0].querySelector('input').classList.remove('d-none');
-
-                    // 隐藏输入框，显示文字
-                    for (let i = 1; i < cells.length; i++) {
-                        const spanElement = cells[i].querySelector('span');
-                        spanElement.classList.remove('d-none');
-                        const inputElement = cells[i].querySelector('input');
-                        inputElement.classList.add('d-none');
-                        spanElement.textContent = inputElement.value;
-                    }
-                } else {
-                    // 显示第一列的单选按钮
-                    cells[0].querySelector('input').classList.remove('d-none');
-
-                    // 隐藏输入框，显示文字
-                    for (let i = 1; i < cells.length; i++) {
-                        const spanElement = cells[i].querySelector('span');
-                        spanElement.classList.remove('d-none');
-                        const inputElement = cells[i].querySelector('input');
-                        inputElement.classList.add('d-none');
-                    }
-                }
-            });
+            document.getElementById('addButton').classList.remove('d-none');
+            document.getElementById('deleteButton').classList.remove('d-none');
+            document.getElementById('saveButton').classList.add('d-none');
         }
 
         function addUser() {
+            // 禁用所有单选按钮
+            var radioButtons = document.getElementsByName('edit-radio');
+            for (var i = 0; i < radioButtons.length; i++) {
+                radioButtons[i].disabled = true;
+            }
+            
+            var newRow = document.getElementById('dataTable').insertRow(-1);
 
+            var radioCell = newRow.insertCell(0);
+            radioCell.innerHTML = '<input type="radio" name="edit-radio" checked>';
+
+            var nameCell = newRow.insertCell(1);
+            nameCell.innerHTML = '<span></span><input type="text" class="form-control" name="new_name">';
+
+            var accountCell = newRow.insertCell(2);
+            accountCell.innerHTML = '<span></span><input type="text" class="form-control" name="new_account">';
+
+            var passwordCell = newRow.insertCell(3);
+            passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="new_password">';
+
+            // 隐藏编辑按钮，显示完成按钮
+            document.getElementById('editButton').classList.add('d-none');
+            document.getElementById('addButton').classList.add('d-none');
+            document.getElementById('deleteButton').classList.add('d-none');
+            document.getElementById('saveButton').classList.remove('d-none');
+        }
+
+        function deleteUser() {
+            var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
+            selectedRow.parentNode.removeChild(selectedRow);
+
+            // 隐藏完成按钮，显示编辑、新增和删除按钮
+            document.getElementById('editButton').classList.remove('d-none');
+            document.getElementById('addButton').classList.remove('d-none');
+            document.getElementById('deleteButton').classList.remove('d-none');
+            document.getElementById('saveButton').classList.add('d-none');
         }
     </script>
 </body>
