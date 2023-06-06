@@ -22,7 +22,9 @@ def login():
         password=request.form['password']
         if User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
-            return render_template("home.html", session[user_mail].name,session[user_mail].load())
+            user_name=session[user_mail].name
+            user_info=session[user_mail].load()
+            return render_template("home.html",user_name,user_info)
         else:
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
