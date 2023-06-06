@@ -27,7 +27,7 @@ def login():
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
 # 
-@app.route('/websites/register.html', methods=['POST', 'GET'])
+@app.route('/websites/register', methods=['POST', 'GET'])
 def register():
     # 一開始if語句嵌套過多層，可讀性差，詢問chatGPT解決辦法，他提議以elif來改善
     error=""
@@ -57,7 +57,7 @@ def register():
     
 # 
 # 因不知道Button和RadioButton在request.form所儲存的key-value，因此向chatGPT詢問 
-@app.route('/websites/home.html', methods=['POST'])
+@app.route('/websites/home', methods=['POST'])
 def home():
     if 'button_edit' in request.form:
         return render_template('/websites/edit.html',request.form['keyword'],request.form['account_id'],request.form['account_password'])
@@ -74,14 +74,14 @@ def home():
         session.clear()
         return render_template("index.html")
     
-@app.route('/websites//edit.html', methods=['POST'])
+@app.route('/websites/edit', methods=['POST'])
 def edit():
     user_info=session.get("user_mail")
     if request.method=="POST":
         user_info.edit(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
         return render_template("/websites/home.html", user_info.name,user_info.load())
 
-@app.route('/websites//add.html', methods=['POST'])
+@app.route('/websites/add', methods=['POST'])
 def add():
     user_info=session.get("user_mail")
     if request.method=="POST":
