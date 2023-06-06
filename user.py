@@ -34,7 +34,7 @@ class User:
     def load(self):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        query='''SELECT * FROM {self.name}'''
+        query='''SELECT * FROM table_name'''.replace('table_name',self.name)
         cursor.execute(query,(self.mail,))
         rows=cursor.fetchall()
         # 詢問如何把搜尋結果轉成字典
@@ -43,21 +43,21 @@ class User:
     def delete(self,delete_keyword):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        delete_sql_row='''DELETE FROM {self.name} WHERE name=?'''
+        delete_sql_row='''DELETE FROM table_name WHERE name=?'''.replace('table_name',self.name)
         cursor.execute(delete_sql_row,(delete_keyword,))
         conn.commit()
         
     def add(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        insert_user='''INSERT INTO {self.name} VALUES (?,?,?)'''
+        insert_user='''INSERT INTO table_name VALUES (?,?,?)'''.replace('table_name',self.name)
         cursor.execute(insert_user,(keyword,account_id,account_password,))
         conn.commit()
 
     def edit(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        edit_sql_str='''UPDATE {self.name} SET id = ? password = ? WHERE name = ?'''
+        edit_sql_str='''UPDATE table_name SET id = ? password = ? WHERE name = ?'''.replace('table_name',self.name)
         cursor.execute(edit_sql_str,(account_id,account_password,keyword,))
         conn.commit()
 
