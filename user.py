@@ -58,7 +58,7 @@ class User:
     
     @staticmethod
     def check_mail_exist(user_mail):
-        cursor=conn.cursor()
+        global cursor
         # 定義查詢語句和佔位符
         query = '''SELECT mail FROM Users WHERE mail LIKE ?'''
         # 執行查詢，將具體值綁定到佔位符
@@ -69,8 +69,8 @@ class User:
     
     @staticmethod
     def check_name_exist(user_name):
-        cursor=conn.cursor()
         # 定義查詢語句和佔位符
+        global cursor
         query = '''SELECT name FROM Users WHERE name LIKE ?'''
         # 執行查詢，將具體值綁定到佔位符
         cursor.execute(query, (user_name,))
