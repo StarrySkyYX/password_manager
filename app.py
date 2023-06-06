@@ -10,6 +10,9 @@ load_dotenv()
 # 使用環境變數
 app.secret_key = os.getenv('SECRET_KEY')
 # closs
+@app.route('/', methods=['POST', 'GET'])
+def load_index():
+    return render_template('index.html')
 
 @app.route('/websites/login', methods=['POST', 'GET'])
 def login():
