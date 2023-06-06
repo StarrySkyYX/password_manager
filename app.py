@@ -49,7 +49,7 @@ def register():
         elif user_name=="":
             error="使用者名稱不得空白"
         else:
-            session[user_mail]=User(user_mail)
+            session[user_mail]=User(user_mail,user_name)
             User.insert_user(user_mail,password,user_name)
             User.add_table(user_name)
             return render_template("/websites/home.html", session[user_mail].name,session[user_mail].load())
