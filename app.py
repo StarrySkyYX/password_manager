@@ -11,10 +11,10 @@ load_dotenv()
 app.secret_key = os.getenv('SECRET_KEY')
 # closs
 @app.route('/', methods=['POST', 'GET'])
-def index():
-    return render_template("index.html")
+def load_index():
+    return render_template('index.html')
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/websites/login', methods=['POST', 'GET'])
 def login():
     error=""
     if request.method=="POST":
@@ -25,7 +25,7 @@ def login():
             return render_template("home.html", session[user_mail].name,session[user_mail].load())
         else:
             error="無效的使用者名稱/密碼"
-    return render_template('login.html',error=error)
+    return render_template('/websites/login.html',error=error)
 # 
 @app.route('/websites/register.html', methods=['POST', 'GET'])
 def register():
@@ -38,8 +38,10 @@ def register():
         user_name = request.form['user_name']
         if user_mail=="":
             error="電子郵件不得空白"
-        elif not User.check_exist(request.form['user_mail']):
+        elif not User.check_mail_exist(request.form['user_mail']):
             error="電子郵件已註冊"
+        elif not User.check_name_exist(request.form['user_name']):
+            error="使用者名稱已被使用"
         elif password=="":
             error="密碼不得空白"
         elif password!=confirm_password:
@@ -49,42 +51,42 @@ def register():
         else:
             session[user_mail]=User(user_mail)
             User.insert_user(user_mail,password,user_name)
-            User.add_table(user_mail)
-            return render_template("home.html", session['user_mail'].name,session[user_mail].load())
-    return render_template('register.html',error=error)
+            User.add_table(user_name)
+            return render_template("/websites/home.html", session[user_mail].name,session[user_mail].load())
+    return render_template('/websites/register.html',error=error)
     
 # 
 # 因不知道Button和RadioButton在request.form所儲存的key-value，因此向chatGPT詢問 
-@app.route('/home', methods=['POST'])
+@app.route('/websites/home.html', methods=['POST'])
 def home():
     if 'button_edit' in request.form:
-        return render_template('edit.html',request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        return render_template('/websites/edit.html',request.form['keyword'],request.form['account_id'],request.form['account_password'])
     elif 'button_add' in request.form:
-        return render_template('add.html')
+        return render_template('/websites/add.html')
     elif 'button_delete' in request.form:
-        user_info=session.get("user_mail")
-        user_info.delete(request.form['keyword'])
-        return render_template("home.html", user_info.name,user_info.load())
+        user_object=session.get("user_mail")
+        user_object.delete(request.form['keyword'])
+        return render_template("/websites/home.html", user_object.name,user_object.load())
     elif 'search' in request.form:
-        user_info=session.get("user_mail")
-        return render_template("home.html", user_info.name,user_info.search(request.form['search'],))
+        user_object=session.get("user_mail")
+        return render_template("/websites/home.html", user_object.name,user_object.search(request.form['search'],))
     elif 'button_logout' in request.form:
         session.clear()
         return render_template("index.html")
     
-@app.route('/edit', methods=['POST'])
+@app.route('/websites//edit.html', methods=['POST'])
 def edit():
     user_info=session.get("user_mail")
     if request.method=="POST":
         user_info.edit(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
-        return render_template("home.html", user_info.name,user_info.load())
+        return render_template("/websites/home.html", user_info.name,user_info.load())
 
-@app.route('/add', methods=['POST'])
+@app.route('/websites//add.html', methods=['POST'])
 def add():
     user_info=session.get("user_mail")
     if request.method=="POST":
         user_info.add(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
-        return render_template("home.html", user_info.name,user_info.load())
+        return render_template("/websites/home.html", user_info.name,user_info.load())
 
 
 if __name__ == '__main__':
