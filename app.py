@@ -74,14 +74,14 @@ def home():
         session.clear()
         return render_template("index.html")
     
-@app.route('/websites/home', methods=['POST'])
+@app.route('/websites/home', methods=['POST', 'GET'])
 def edit():
     user=session.get("user_mail")
     if request.method=="POST":
         user.edit(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
         return render_template("/websites/home.html", user_name=user.name,user_info=user.load())
 
-@app.route('/websites/add', methods=['POST'])
+@app.route('/websites/add', methods=['POST', 'GET'])
 def add():
     user=session.get("user_mail")
     if request.method=="POST":
