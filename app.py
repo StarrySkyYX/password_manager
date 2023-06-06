@@ -20,7 +20,7 @@ def login():
     if request.method=="POST":
         user_mail=request.form['user_mail']
         password=request.form['password']
-        if not User.check_login(user_mail,password):
+        if User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
             return render_template("home.html", session[user_mail].name,session[user_mail].load())
         else:
@@ -51,7 +51,7 @@ def register():
         else:
             User.add_table(user_name)
             User.insert_user(user_mail,password,user_name)
-            session[user_mail]=User(user_mail,user_name)
+            session[user_mail]=User(user_mail)
             return render_template("/websites/home.html", session[user_mail].name,session[user_mail].load())
     return render_template('/websites/register.html',error=error)
     
@@ -74,7 +74,7 @@ def home():
         session.clear()
         return render_template("index.html")
     
-@app.route('/websites/edit', methods=['POST'])
+@app.route('/websites/home', methods=['POST'])
 def edit():
     user_info=session.get("user_mail")
     if request.method=="POST":
