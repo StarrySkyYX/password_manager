@@ -15,13 +15,7 @@ class User:
         cursor=conn.cursor()
         self.mail=user_mail
         query='''SELECT name FROM Users WHERE mail LIKE ?'''
-        result=cursor.execute(query, (user_mail,)).fetchall()
-        self.name=result[0]
-        
-
-    def __init__(self,user_mail,user_name):
-        self.mail=user_mail
-        self.name=user_name
+        self.name=cursor.execute(query, (user_mail,)).fetchone()
 
 
     def search(self,search_str):
@@ -73,7 +67,7 @@ class User:
         # 執行查詢，將具體值綁定到佔位符
         cursor.execute(query, (user_mail,))
         # 獲取查詢結果
-        check_password =(cursor.fetchall())[0]
+        check_password =(cursor.fetchone())
         if check_password==password:
             return True
         return False
