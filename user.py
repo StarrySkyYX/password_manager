@@ -110,13 +110,13 @@ class User:
     def add_table(user_name):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        add_sql_table=f'''
-        CREATE TABLE {user_name} (
+        add_sql_table='''
+        CREATE TABLE table_name (
             "name"  TEXT,
             "id"    TEXT,
             "password"  TEXT,
             PRIMARY KEY("name")
             )
-        '''
+        '''.replace('table_name',user_name)
         cursor.execute(add_sql_table)
         conn.commit()
