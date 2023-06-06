@@ -23,7 +23,7 @@ def login():
         if User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
             user_name=session[user_mail].name
-            user_info=json.dumps(User.load(user_name))
+            user_info=json.dumps(session[user_mail].load())
             return render_template("/websites/home.html",user_name=user_name,user_info=user_info)
         else:
             error="無效的使用者名稱/密碼"
