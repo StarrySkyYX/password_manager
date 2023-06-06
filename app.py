@@ -19,7 +19,7 @@ def login():
         password=request.form['password']
         if User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
-            return render_template("home.html", session[user_mail].name,session[user_mail].load())
+            return render_template("home.html", session[user_mail].name,session[user_mail].load(session[user_mail].name))
         else:
             error="無效的使用者名稱/密碼"
     return render_template('login.html',error=error)
@@ -35,8 +35,10 @@ def register():
         user_name = request.form['user_name']
         if user_mail=="":
             error="電子郵件不得空白"
-        elif not User.check_exist(request.form['user_mail']):
+        elif not User.check_mail_exist(request.form['user_mail']):
             error="電子郵件已註冊"
+        elif not User.check_name_exist(request.form['user_name']):
+            error="使用者名稱已被使用"
         elif password=="":
             error="密碼不得空白"
         elif password!=confirm_password:
@@ -46,8 +48,8 @@ def register():
         else:
             session[user_mail]=User(user_mail)
             User.insert_user(user_mail,password,user_name)
-            User.add_table(user_mail)
-            return render_template("home.html", session['user_mail'].name,session[user_mail].load())
+            User.add_table(user_name)
+            return render_template("home.html", session[user_mail].name,session[user_mail].load())
     return render_template('register.html',error=error)
     
 # 
@@ -59,12 +61,12 @@ def home():
     elif 'button_add' in request.form:
         return render_template('add.html')
     elif 'button_delete' in request.form:
-        user_info=session.get("user_mail")
-        user_info.delete(request.form['keyword'])
-        return render_template("home.html", user_info.name,user_info.load())
+        user_object=session.get("user_mail")
+        user_object.delete(request.form['keyword'])
+        return render_template("home.html", user_object.name,user_object.load())
     elif 'search' in request.form:
-        user_info=session.get("user_mail")
-        return render_template("home.html", user_info.name,user_info.search(request.form['search'],))
+        user_object=session.get("user_mail")
+        return render_template("home.html", user_object.name,user_object.search(request.form['search'],))
     elif 'button_logout' in request.form:
         session.clear()
         return render_template("index.html")
