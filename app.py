@@ -54,7 +54,8 @@ def register():
             User.add_table(user_name)
             User.insert_user(user_mail,password,user_name)
             session[user_mail]=User(user_mail)
-            return render_template("/websites/home.html", user_name=session[user_mail].name,user_info=session[user_mail].load())
+            user_info=json.dumps(session[user_mail].load())
+            return render_template("/websites/home.html", user_name=session[user_mail].name,user_info=user_info)
     return render_template('/websites/register.html',error=error)
     
 # 
@@ -103,5 +104,6 @@ atexit.register(clear_session)
 
 
 
+   
 
 
