@@ -57,7 +57,7 @@ def register():
     
 # 
 # 因不知道Button和RadioButton在request.form所儲存的key-value，因此向chatGPT詢問 
-@app.route('/websites/home', methods=['POST'])
+@app.route('/websites/home', methods=['POST', 'GET'])
 def home():
     if 'button_edit' in request.form:
         return render_template('/websites/edit.html',request.form['keyword'],request.form['account_id'],request.form['account_password'])
