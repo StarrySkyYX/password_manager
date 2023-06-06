@@ -15,8 +15,8 @@ class User:
         cursor=conn.cursor()
         self.mail=user_mail
         query='''SELECT name FROM Users WHERE mail LIKE ?'''
-        result=cursor.execute(query, (user_mail,)).fetchall()
-        self.name=result[0]
+        self.name=cursor.execute(query, (user_mail,)).fetchone()
+
 
     def search(self,search_str):
         rows=self.load
@@ -27,32 +27,36 @@ class User:
     def load(self):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        query='''SELECT * FROM {self.name}'''
-        cursor.execute(query,(self.mail,))
+        query='''SELECT * FROM table_name'''.replace('table_name',self.name)
+        cursor.execute(query)
         rows=cursor.fetchall()
         # 詢問如何把搜尋結果轉成字典
-        return [dict(row) for row in rows] 
+        return [dict(row) for row in rows]
+       
     
     def delete(self,delete_keyword):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        delete_sql_row='''DELETE FROM {self.name} WHERE name=?'''
+        delete_sql_row='''DELETE FROM table_name WHERE name=?'''.replace('table_name',self.name)
         cursor.execute(delete_sql_row,(delete_keyword,))
         conn.commit()
+
         
     def add(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        insert_user='''INSERT INTO {self.name} VALUES (?,?,?)'''
+        insert_user='''INSERT INTO table_name VALUES (?,?,?)'''.replace('table_name',self.name)
         cursor.execute(insert_user,(keyword,account_id,account_password,))
         conn.commit()
+
 
     def edit(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        edit_sql_str='''UPDATE {self.name} SET id = ? password = ? WHERE name = ?'''
+        edit_sql_str='''UPDATE table_name SET id = ? password = ? WHERE name = ?'''.replace('table_name',self.name)
         cursor.execute(edit_sql_str,(account_id,account_password,keyword,))
         conn.commit()
+
 
     @staticmethod
     def check_login(user_mail,password):
@@ -63,7 +67,7 @@ class User:
         # 執行查詢，將具體值綁定到佔位符
         cursor.execute(query, (user_mail,))
         # 獲取查詢結果
-        check_password =(cursor.fetchall())[0]
+        check_password =(cursor.fetchone())
         if check_password==password:
             return True
         return False
@@ -104,12 +108,13 @@ class User:
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         add_sql_table='''
-        CREATE TABLE {name} (
+        CREATE TABLE table_name (
             "name"  TEXT,
             "id"    TEXT,
             "password"  TEXT,
             PRIMARY KEY("name")
             )
-        '''
+        '''.replace('table_name',user_name)
         cursor.execute(add_sql_table)
         conn.commit()
+
