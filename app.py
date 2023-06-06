@@ -24,7 +24,7 @@ def login():
             session[user_mail]=User(user_mail)
             user_name=session[user_mail].name
             user_info=session[user_mail].load()
-            return render_template("home.html",user_name,user_info)
+            return render_template("./websites/home.html",user_name,user_info)
         else:
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
