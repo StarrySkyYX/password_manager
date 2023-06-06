@@ -111,7 +111,7 @@ class User:
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         add_sql_table='''
-        CREATE TABLE {name} (
+        CREATE TABLE {user_name} (
             "name"  TEXT,
             "id"    TEXT,
             "password"  TEXT,
