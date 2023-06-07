@@ -64,9 +64,6 @@ def home():
         elif 'button_add' in request.form:
             login_user[user_agent].add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
             return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
-        # elif 'button_delete' in request.form:
-        #     login_user[user_agent].delete(request.json.get('keyword'))
-        #     return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
         elif 'button_logout' in request.form:
             del login_user[user_agent]
             return render_template("index.html")  
