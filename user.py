@@ -37,7 +37,7 @@ class User:
     def edit(self,account_name,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        edit_sql_str='''UPDATE {} SET id = ? password = ? WHERE name = ?'''.format(self.name)
+        edit_sql_str='''UPDATE {} SET id = ?, password = ? WHERE name = ?'''.format(self.name)
         cursor.execute(edit_sql_str,(account_id,account_password,account_name,))
         conn.commit()
 
