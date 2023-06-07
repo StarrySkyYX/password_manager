@@ -94,9 +94,10 @@ class User:
         cursor=conn.cursor()
         add_sql_table='''
         CREATE TABLE {} (
-            "name"  TEXT,
-            "id"    TEXT,
-            "password"  TEXT,
+            "name"  TEXT NOT NULL,
+            "id"     TEXT NOT NULL,
+            "password"   TEXT NOT NULL,
+            PRIMARY KEY("name")
             )
         '''.format(user_name)
         cursor.execute(add_sql_table)
