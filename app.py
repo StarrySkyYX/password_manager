@@ -1,14 +1,10 @@
-from flask import Flask,request,render_template,session
+from flask import Flask,request,render_template
 from user import User
-import os
-from dotenv import load_dotenv
-import atexit,json
+
 
 app = Flask(__name__)
-# 讀取 .env 檔案
-load_dotenv()
-# 使用環境變數
-app.secret_key = os.getenv('SECRET_KEY')
+login_user={}
+
 # closs
 @app.route('/', methods=['POST', 'GET'])
 def load_index():
@@ -21,10 +17,10 @@ def login():
         user_mail=request.form['user_mail']
         password=request.form['password']
         if User.check_login(user_mail,password):
-            session[user_mail]=User(user_mail)
-            user_name=json.dumps(session[user_mail].name)
-            user_info=json.dumps(session[user_mail].load())
-            return render_template("/websites/home.html",user_name=user_name,user_info=user_info)
+            # gpt
+            user_agent= request.headers.get('User-Agent')
+            login_user[user_agent]=User(user_mail)
+            return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
         else:
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
@@ -53,54 +49,31 @@ def register():
         else:
             User.add_table(user_name)
             User.insert_user(user_mail,password,user_name)
-            session[user_mail]=User(user_mail)
-            return render_template("/websites/home.html", user_name=session[user_mail].name,user_info=session[user_mail].load())
+            user_agent= request.headers.get('User-Agent')
+            login_user[user_agent]=User(user_mail)
+            return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
     return render_template('/websites/register.html',error=error)
-    
-# 
+
 # 因不知道Button和RadioButton在request.form所儲存的key-value，因此向chatGPT詢問 
 @app.route('/websites/home', methods=['POST', 'GET'])
 def home():
+    user_agent= request.headers.get('User-Agent')
     if 'button_edit' in request.form:
-        return render_template('/websites/edit.html',request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        login_user[user_agent].edit(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
     elif 'button_add' in request.form:
-        return render_template('/websites/add.html')
+        login_user[user_agent].add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+        return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
     elif 'button_delete' in request.form:
-        user_object=session.get("user_mail")
-        user_object.delete(request.form['keyword'])
-        return render_template("/websites/home.html", user_name=user_object.name,user_info=user_object.load())
-    elif 'search' in request.form:
-        user_object=session.get("user_mail")
-        return render_template("/websites/home.html", user_name=user_object.name,user_info=user_object.search(request.form['search'],))
+        login_user[user_agent].delete(request.form['keyword'])
+        return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
     elif 'button_logout' in request.form:
-        session.clear()
-        return render_template("index.html")
-    return render_template("/websites/home.html")
-    
-@app.route('/websites/home', methods=['POST', 'GET'])
-def edit():
-    user=session.get("user_mail")
-    if request.method=="POST":
-        user.edit(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
-        return render_template("/websites/home.html", user_name=user.name,user_info=user.load())
-
-@app.route('/websites/add', methods=['POST', 'GET'])
-def add():
-    user=session.get("user_mail")
-    if request.method=="POST":
-        user.add(request.form['keyword'],request.form['account_id'],request.form['account_password'],)
-        return render_template("/websites/home.html", user_name=user.name,user_info=user.load())
-    
-
-
+        del login_user[user_agent]
+        return render_template("index.html")  
+    return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-def clear_session():
-    session.clear()
-
-atexit.register(clear_session)
 
 
 
