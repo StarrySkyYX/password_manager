@@ -11,6 +11,7 @@ atexit.register(close_db_conn)
 class User:
     name=""
     mail=""
+    account=[]
     def __init__(self,user_mail):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
@@ -18,8 +19,25 @@ class User:
         query='''SELECT name FROM Users WHERE mail=?'''
         self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
 
-    
+    def __dict__(self):
+        return {
+            'name': self.name,
+            'mail': self.mail,
+            'account': self.account
+        }
 
+    def to_json(self):
+        return json.dumps(self.__dict__())
+
+    @staticmethod
+    def from_json(json_str):
+        data = json.loads(json_str)
+        user = User(data['mail'])
+        user.name = data['name']
+        user.account = data['account']
+        return user
+
+    
     def search(self,search_str):
         rows=self.load()
         for row in rows:
@@ -40,6 +58,7 @@ class User:
                 'id':row_tuple[1],
                 'password':row_tuple[2]
                                 })
+        self.account=result
         return result
         
     
@@ -65,6 +84,8 @@ class User:
         edit_sql_str='''UPDATE table_name SET id = ? password = ? WHERE name = ?'''.replace('table_name',self.name)
         cursor.execute(edit_sql_str,(account_id,account_password,keyword,))
         conn.commit()
+
+    
 
 
     @staticmethod
@@ -126,4 +147,4 @@ class User:
         '''.replace('table_name',user_name)
         cursor.execute(add_sql_table)
         conn.commit()
-    
+
