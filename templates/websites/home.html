@@ -34,13 +34,13 @@
                 <button type="button" class="btn btn-secondary" id="editButton" onclick="editUser()">編輯</button>
                 <button type="submit" class="btn btn-secondary d-none" id="saveButton" onclick="saveUser()" value="button_complete" name="button_complete">完成</button>
                 <button type="button" class="btn btn-secondary" id="addButton" onclick="addUser()">新增</button>
-                <button type="submit" class="btn btn-danger" id="deleteButton" onclick="deleteUser()" value="button_delete" name="button_delete">刪除</button>
+                <button type="button" class="btn btn-danger" id="deleteButton" onclick="deleteUser()" value="button_delete" name="button_delete">刪除</button>
             </div>
         </div>
         {{user_info}}
         <div class="row mt-4">
             <div class="col-12">
-                <form id="userForm">
+                <form id="userForm" method="post">
                     <table class="table" id="dataTable">
                         <thead>
                             <tr>
@@ -222,6 +222,27 @@
         function deleteUser() {
             var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             selectedRow.parentNode.removeChild(selectedRow);
+            var keyword = selectedRow.cells[1].querySelector('span').textContent;
+
+            // 使用fetch发送异步请求到后端
+            fetch('/websites/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ keyword: keyword })
+            })
+            .then(response => {
+                if (response.ok) {
+                    selectedRow.parentNode.removeChild(selectedRow);
+                } else {
+                    throw new Error('删除请求失败');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                // 处理错误
+            });
 
             // 隐藏完成按钮，显示编辑、新增和删除按钮
             document.getElementById('editButton').classList.remove('d-none');
