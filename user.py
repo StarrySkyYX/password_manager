@@ -3,28 +3,27 @@ import atexit
 conn = sqlite3.connect('data/password_manager.db')
 cursor=conn.cursor()
 # gpt
-def close_db_conn():
-    conn.close()
-atexit.register(close_db_conn)
+# def close_db_conn():
+#     conn.close()
+# atexit.register(close_db_conn)
 
 class User:
-    name=""
-    mail=""
     def __init__(self,user_mail):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         self.mail=user_mail
         query='''SELECT name FROM Users WHERE mail=?'''
         self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
+        conn.close()
         
     
     def delete(self,delete_keyword):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        delete_sql_row='''DELETE FROM {} WHERE name=?'''.format(self.name)
+        delete_sql_row='''DELETE FROM {} WHERE name=?;'''.format(self.name)
         cursor.execute(delete_sql_row,(delete_keyword,))
         conn.commit()
-
+        conn.close()
         
     def add(self,account_name,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
@@ -32,14 +31,16 @@ class User:
         insert_user='''INSERT INTO {} VALUES (?,?,?)'''.format(self.name)
         cursor.execute(insert_user,(account_name,account_id,account_password,))
         conn.commit()
+        conn.close()
 
 
     def edit(self,account_name,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        edit_sql_str='''UPDATE {} SET id = ?, password = ? WHERE name = ?'''.format(self.name)
+        edit_sql_str='''UPDATE {} SET id = ?, password = ? WHERE name = ?;'''.format(self.name)
         cursor.execute(edit_sql_str,(account_id,account_password,account_name,))
         conn.commit()
+        conn.close()
 
     
 
@@ -50,6 +51,7 @@ class User:
         # 定義查詢語句和佔位符
         query = '''SELECT password FROM Users WHERE mail LIKE ?'''
         result=cursor.execute(query, (user_mail,)).fetchall()
+        conn.close()
         if len(result)==0:
             return False
         check_password =''.join(result[0])
@@ -66,7 +68,9 @@ class User:
         # 執行查詢，將具體值綁定到佔位符
         cursor.execute(query, (user_mail,))
         if len(cursor.fetchall())==0:
+            conn.close()
             return True
+        conn.close()
         return False
     
     @staticmethod
@@ -78,7 +82,9 @@ class User:
         # 執行查詢，將具體值綁定到佔位符
         cursor.execute(query, (user_name,))
         if len(cursor.fetchall())==0:
+            conn.close()
             return True
+        conn.close()
         return False
     
     @staticmethod
@@ -88,6 +94,8 @@ class User:
         insert_user='''INSERT INTO Users VALUES (?,?,?)'''
         cursor.execute(insert_user,(user_mail,password,user_name,))
         conn.commit()
+        conn.close()
+
     @staticmethod
     def add_table(user_name):
         conn = sqlite3.connect('data/password_manager.db')
@@ -102,6 +110,8 @@ class User:
         '''.format(user_name)
         cursor.execute(add_sql_table)
         conn.commit()
+        conn.close()
+
     @staticmethod   
     def load(name):
         conn = sqlite3.connect('data/password_manager.db')
@@ -109,6 +119,7 @@ class User:
         query = '''SELECT * FROM {}'''.format(name)
         cursor.execute(query)
         rows = cursor.fetchall()
+        conn.close()
         result=[]
         for row_tuple in rows:
             result.append({
