@@ -20,11 +20,9 @@ def login():
     if request.method=="POST":
         user_mail=request.form['user_mail']
         password=request.form['password']
-        if User.check_login(user_mail,password):
+        if not User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
-            user_name=session[user_mail].name
-            user_info=session[user_mail].load()
-            return render_template("./websites/home.html",user_name=user_name,user_info=user_info)
+            return render_template("home.html", session[user_mail].name,session[user_mail].load())
         else:
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
@@ -75,9 +73,8 @@ def home():
     elif 'button_logout' in request.form:
         session.clear()
         return render_template("index.html")
-    return render_template("/websites/home.html")
     
-@app.route('/websites/home', methods=['POST'])
+@app.route('/websites/edit', methods=['POST'])
 def edit():
     user_info=session.get("user_mail")
     if request.method=="POST":
