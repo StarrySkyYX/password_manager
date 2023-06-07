@@ -70,21 +70,21 @@ def delete():
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
         login_user[user_agent].delete(request.json.get('account_name'))
-        return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
+    return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
     
 @app.route('/websites/add', methods=['POST', 'GET'])   
 def add():
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
         login_user[user_agent].add(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
-        return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
+    return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
     
 @app.route('/websites/edit', methods=['POST', 'GET'])   
 def edit():
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
         login_user[user_agent].edit(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
-        return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
+    return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
     
     
 
