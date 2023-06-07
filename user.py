@@ -97,7 +97,6 @@ class User:
             "name"  TEXT,
             "id"    TEXT,
             "password"  TEXT,
-            PRIMARY KEY("name")
             )
         '''.format(user_name)
         cursor.execute(add_sql_table)
