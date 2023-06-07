@@ -13,3 +13,4 @@ while ($row = $query->fetchArray(SQLITE3_ASSOC)) {
 
 // 将查询结果转换为 JSON 格式并返回
 echo json_encode($results);
+?>
