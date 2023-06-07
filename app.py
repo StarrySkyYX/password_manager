@@ -52,7 +52,6 @@ def register():
             user_agent= request.headers.get('User-Agent')
             login_user[user_agent]=User(user_mail)
             return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
-    return render_template('/websites/register.html',error=error)
 
 # 因不知道Button和RadioButton在request.form所儲存的key-value，因此向chatGPT詢問 
 @app.route('/websites/home', methods=['POST', 'GET'])
@@ -74,8 +73,3 @@ def home():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
