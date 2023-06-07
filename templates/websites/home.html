@@ -34,11 +34,11 @@
     <div class="container rounded-4" style="margin-top: 7rem;background-color: rgba(255, 255, 255, 0.5);padding: 3rem;">
         <div class="row">
             <div class="col-12">
-                <h2>帳號密碼資訊</h2>
+                <h2 style="color: #fff;">帳號密碼資訊</h2>
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 mt-2">
                 <button type="button" class="btn btn-secondary" id="editButton" onclick="editUser()">編輯</button>
                 <button type="button" class="btn btn-secondary d-none" id="saveButton" onclick="saveUser()" value="button_complete" name="button_complete">完成</button>
                 <button type="button" class="btn btn-secondary" id="addButton" onclick="addUser()" name="add_button">新增</button>
@@ -48,7 +48,7 @@
         <div class="row mt-4">
             <div class="col-12">
                 <form id="userForm" method="post">
-                    <table class="table rounded-4" id="dataTable" style="background-color: #fff;">
+                    <table class="table rounded-4 table-hover" id="dataTable" style="background-color: rgba(255, 255, 255, 0.7);border-color: #bababa;">
                         <thead>
                             <tr>
                                 <th class="col-1"></th>
@@ -75,10 +75,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p id="modalErrorMessage">輸入欄位不得為空白</p>
+                    <p id="modalErrorMessage" class="text-danger" style="font-weight:bold;">輸入欄位不得為空白</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">關閉</button>
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@
                 // 创建单元格并设置单元格内容
                 var radioCell = row.insertCell(0);
                 // 为第一个单元格的单选按钮添加属性 checked
-                radioCell.innerHTML = '<input type="radio" name="keyword"' + (i === 0 ? 'checked' : '') + '>';
+                radioCell.innerHTML = '<input type="radio" name="keyword" style="margin-left:1rem;"' + (i === 0 ? 'checked' : '') + '>';
 
                 var nameCell = row.insertCell(1);
                 nameCell.innerHTML = '<span>' + jsonData[i].name + '</span><input type="text" class="form-control d-none" name="account_name">';
@@ -274,7 +274,7 @@
             var newRow = document.getElementById('dataTable').insertRow(-1);
 
             var radioCell = newRow.insertCell(0);
-            radioCell.innerHTML = '<input type="radio" name="keyword" checked>';
+            radioCell.innerHTML = '<input type="radio" name="keyword" style="margin-left:1rem;" checked>';
 
             var nameCell = newRow.insertCell(1);
             nameCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_name">';
