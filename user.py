@@ -1,6 +1,5 @@
 import sqlite3
 import atexit
-import json
 conn = sqlite3.connect('data/password_manager.db')
 cursor=conn.cursor()
 # gpt
@@ -22,7 +21,7 @@ class User:
     def delete(self,delete_keyword):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        delete_sql_row='''DELETE FROM table_name WHERE name=?'''.replace('table_name',self.name)
+        delete_sql_row='''DELETE FROM {} WHERE name=?'''.format(self.name)
         cursor.execute(delete_sql_row,(delete_keyword,))
         conn.commit()
 
@@ -30,7 +29,7 @@ class User:
     def add(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        insert_user='''INSERT INTO table_name VALUES (?,?,?)'''.replace('table_name',self.name)
+        insert_user='''INSERT INTO {} VALUES (?,?,?)'''.format(self.name)
         cursor.execute(insert_user,(keyword,account_id,account_password,))
         conn.commit()
 
@@ -38,7 +37,7 @@ class User:
     def edit(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        edit_sql_str='''UPDATE table_name SET id = ? password = ? WHERE name = ?'''.replace('table_name',self.name)
+        edit_sql_str='''UPDATE {} SET id = ? password = ? WHERE name = ?'''.format(self.name)
         cursor.execute(edit_sql_str,(account_id,account_password,keyword,))
         conn.commit()
 
@@ -94,13 +93,13 @@ class User:
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         add_sql_table='''
-        CREATE TABLE table_name (
+        CREATE TABLE {} (
             "name"  TEXT,
             "id"    TEXT,
             "password"  TEXT,
             PRIMARY KEY("name")
             )
-        '''.replace('table_name',user_name)
+        '''.format(user_name)
         cursor.execute(add_sql_table)
         conn.commit()
     @staticmethod   
