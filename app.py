@@ -52,7 +52,6 @@ def register():
             user_agent= request.headers.get('User-Agent')
             login_user[user_agent]=User(user_mail)
             return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
-    return render_template('/websites/register.html',error=error)
 
 # 因不知道Button和RadioButton在request.form所儲存的key-value，因此向chatGPT詢問 
 @app.route('/websites/home', methods=['POST', 'GET'])
@@ -65,18 +64,21 @@ def home():
         elif 'button_add' in request.form:
             login_user[user_agent].add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
             return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
-        elif 'button_delete' in request.form:
-            login_user[user_agent].delete(request.form['keyword'])
-            return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
+        # elif 'button_delete' in request.form:
+        #     login_user[user_agent].delete(request.json.get('keyword'))
+        #     return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
         elif 'button_logout' in request.form:
             del login_user[user_agent]
             return render_template("index.html")  
         return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
+    
+
+@app.route('/websites/delete', methods=['POST', 'GET'])   
+def delete():
+    if request.method=="POST":
+        user_agent=request.headers.get('User-Agent')
+        login_user[user_agent].delete(request.json.get('keyword'))
+        return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
