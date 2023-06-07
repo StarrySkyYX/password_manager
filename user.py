@@ -17,26 +17,11 @@ class User:
         query='''SELECT name FROM Users WHERE mail=?'''
         self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
         
-
-    def search(self,search_str):
-        rows=self.load()
-        for row in rows:
-            if row['name']==search_str:
-                return row
-
-    def load(self):
-        conn = sqlite3.connect('data/password_manager.db')
-        cursor = conn.cursor()
-        query = '''SELECT * FROM {}'''.format(self.name)
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        return [dict(row) for row in rows]
-       
     
     def delete(self,delete_keyword):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        delete_sql_row='''DELETE FROM table_name WHERE name=?'''.replace('table_name',self.name)
+        delete_sql_row='''DELETE FROM {} WHERE name=?'''.format(self.name)
         cursor.execute(delete_sql_row,(delete_keyword,))
         conn.commit()
 
@@ -44,7 +29,7 @@ class User:
     def add(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        insert_user='''INSERT INTO table_name VALUES (?,?,?)'''.replace('table_name',self.name)
+        insert_user='''INSERT INTO {} VALUES (?,?,?)'''.format(self.name)
         cursor.execute(insert_user,(keyword,account_id,account_password,))
         conn.commit()
 
@@ -52,10 +37,11 @@ class User:
     def edit(self,keyword,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
-        edit_sql_str='''UPDATE table_name SET id = ? password = ? WHERE name = ?'''.replace('table_name',self.name)
+        edit_sql_str='''UPDATE {} SET id = ? password = ? WHERE name = ?'''.format(self.name)
         cursor.execute(edit_sql_str,(account_id,account_password,keyword,))
         conn.commit()
 
+    
 
     @staticmethod
     def check_login(user_mail,password):
@@ -107,13 +93,27 @@ class User:
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         add_sql_table='''
-        CREATE TABLE table_name (
+        CREATE TABLE {} (
             "name"  TEXT,
             "id"    TEXT,
             "password"  TEXT,
             PRIMARY KEY("name")
             )
-        '''.replace('table_name',user_name)
+        '''.format(user_name)
         cursor.execute(add_sql_table)
         conn.commit()
-
+    @staticmethod   
+    def load(name):
+        conn = sqlite3.connect('data/password_manager.db')
+        cursor = conn.cursor()
+        query = '''SELECT * FROM {}'''.format(name)
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        result={}
+        for row_tuple in rows:
+            result[row_tuple[0]]={
+                "name":row_tuple[0],
+                "id":row_tuple[1],
+            "password":row_tuple[2]
+                                }
+        return result
