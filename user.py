@@ -26,19 +26,19 @@ class User:
         conn.commit()
 
         
-    def add(self,keyword,account_id,account_password):
+    def add(self,account_name,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         insert_user='''INSERT INTO {} VALUES (?,?,?)'''.format(self.name)
-        cursor.execute(insert_user,(keyword,account_id,account_password,))
+        cursor.execute(insert_user,(account_name,account_id,account_password,))
         conn.commit()
 
 
-    def edit(self,keyword,account_id,account_password):
+    def edit(self,account_name,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         edit_sql_str='''UPDATE {} SET id = ? password = ? WHERE name = ?'''.format(self.name)
-        cursor.execute(edit_sql_str,(account_id,account_password,keyword,))
+        cursor.execute(edit_sql_str,(account_id,account_password,account_name,))
         conn.commit()
 
     
