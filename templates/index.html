@@ -45,7 +45,7 @@
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             var screenWidth = window.innerWidth;
 
-            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth < 768)) {
+            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth > 768)) {
                 navbar.style.backgroundColor = 'transparent';
             } else {
                 navbar.style.backgroundColor = 'rgba(59, 75, 89, 1)';
@@ -61,7 +61,7 @@
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             var screenWidth = window.innerWidth;
 
-            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth < 768)) {
+            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth > 768)) {
                 navbar.style.backgroundColor = 'transparent';
             } else {
                 navbar.style.backgroundColor = 'rgba(59, 75, 89, 1)';
