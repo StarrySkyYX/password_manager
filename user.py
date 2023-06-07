@@ -18,14 +18,21 @@ class User:
         self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
         
     
+<<<<<<< HEAD
+=======
+    # 參數化查詢的改進版本
+>>>>>>> a4c188747c40a0df4ec0190ed5fe7641daff7910
     def delete(self, delete_keyword):
         conn = sqlite3.connect('data/password_manager.db')
         cursor = conn.cursor()
         delete_sql_row = '''DELETE FROM {} WHERE name=:name'''.format(self.name)
         cursor.execute(delete_sql_row, {"name": delete_keyword})
         conn.commit()
+<<<<<<< HEAD
         conn.close()
 
+=======
+>>>>>>> a4c188747c40a0df4ec0190ed5fe7641daff7910
         
     def add(self,account_name,account_id,account_password):
         conn = sqlite3.connect('data/password_manager.db')
