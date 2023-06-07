@@ -75,6 +75,7 @@ def home():
     elif 'button_logout' in request.form:
         session.clear()
         return render_template("index.html")
+    return render_template("/websites/home.html")
     
 @app.route('/websites/home', methods=['POST', 'GET'])
 def edit():
