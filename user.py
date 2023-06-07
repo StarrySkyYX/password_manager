@@ -11,55 +11,12 @@ atexit.register(close_db_conn)
 class User:
     name=""
     mail=""
-    account=[]
     def __init__(self,user_mail):
         conn = sqlite3.connect('data/password_manager.db')
         cursor=conn.cursor()
         self.mail=user_mail
         query='''SELECT name FROM Users WHERE mail=?'''
         self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
-
-    def __dict__(self):
-        return {
-            'name': self.name,
-            'mail': self.mail,
-            'account': self.account
-        }
-
-    def to_json(self):
-        return json.dumps(self.__dict__())
-
-    @staticmethod
-    def from_json(json_str):
-        data = json.loads(json_str)
-        user = User(data['mail'])
-        user.name = data['name']
-        user.account = data['account']
-        return user
-
-    
-    def search(self,search_str):
-        rows=self.load()
-        for row in rows:
-            if row['name']==search_str:
-                return row
-    
-   
-    def load(self):
-        conn = sqlite3.connect('data/password_manager.db')
-        cursor = conn.cursor()
-        query = '''SELECT * FROM {}'''.format(self.name)
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        result=[]
-        for row_tuple in rows:
-            result.append({
-                'name':row_tuple[0],
-                'id':row_tuple[1],
-                'password':row_tuple[2]
-                                })
-        self.account=result
-        return result
         
     
     def delete(self,delete_keyword):
@@ -86,7 +43,6 @@ class User:
         conn.commit()
 
     
-
 
     @staticmethod
     def check_login(user_mail,password):
@@ -147,4 +103,18 @@ class User:
         '''.replace('table_name',user_name)
         cursor.execute(add_sql_table)
         conn.commit()
-
+    @staticmethod   
+    def load(name):
+        conn = sqlite3.connect('data/password_manager.db')
+        cursor = conn.cursor()
+        query = '''SELECT * FROM {}'''.format(name)
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        result={}
+        for row_tuple in rows:
+            result[row_tuple[0]]={
+                "name":row_tuple[0],
+                "id":row_tuple[1],
+            "password":row_tuple[2]
+                                }
+        return result
