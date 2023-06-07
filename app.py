@@ -5,7 +5,6 @@ from user import User
 app = Flask(__name__)
 login_user={}
 
-# closs
 @app.route('/', methods=['POST', 'GET'])
 def load_index():
     return render_template('index.html')
