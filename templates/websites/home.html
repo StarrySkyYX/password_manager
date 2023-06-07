@@ -27,13 +27,12 @@
         <div class="row">
             <div class="col-12">
                 <h2>帳號密碼資訊</h2>
-                <p>{{user_name}}{{user_info}}</p>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
                 <button type="button" class="btn btn-primary" id="editButton" onclick="editUser()">編輯</button>
-                <button type="submit" class="btn btn-primary d-none" id="saveButton" onclick="saveUser()">完成</button>
+                <button type="button" class="btn btn-primary d-none" id="saveButton" onclick="saveUser()">完成</button>
                 <button type="button" class="btn btn-primary" id="addButton" onclick="addUser()">新增</button>
                 <button type="button" class="btn btn-danger" id="deleteButton" onclick="deleteUser()">刪除</button>
             </div>
@@ -80,44 +79,43 @@
 
     <script>
         var radioButtonStatus = false;
+        var jsonData = [];
 
-        // 在页面加载完成后执行以下操作
-        $(document).ready(function () {
-            // 使用 AJAX 请求从服务器获取数据
-            $.ajax({
-                url: 'get_data.php', // PHP 文件用于从数据库中获取数据并返回 JSON 格式
-                method: 'GET',
-                success: function (data) {
-                    var jsonData = JSON.parse(data);
-
-                    // 获取表格的 tbody 元素
-                    var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-
-                    for (var i = 0; i < jsonData.length; i++) {
-                        // 创建新的表格行
-                        var row = tableBody.insertRow(i);
-
-                        // 创建单元格并设置单元格内容
-                        var radioCell = row.insertCell(0);
-                        // 为第一个单元格的单选按钮添加属性 checked
-                        radioCell.innerHTML = '<input type="radio" name="edit-radio" ' + (i === 0 ? 'checked' : '') + '>';
-
-                        var nameCell = row.insertCell(1);
-                        nameCell.innerHTML = '<span>' + jsonData[i].name + '</span><input type="text" class="form-control d-none" name="edit_name">';
-
-                        var accountCell = row.insertCell(2);
-                        accountCell.innerHTML = '<span>' + jsonData[i].id + '</span><input type="text" class="form-control d-none" name="edit_account">';
-
-                        var passwordCell = row.insertCell(3);
-                        passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" name="edit_password">';
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText);
-                    $('#errorModal').modal('show');
-                }
-            });
+        $.ajax({
+            url: '',
+            method: 'GET',
+            success: function(response) {
+                jsonData = JSON.parse(response);
+                generateTable();
+            },
+            error: function() {
+                $('#errorModal').modal('show');
+            }
         });
+
+        function generateTable() {
+            // 获取表格的 tbody 元素
+            var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+
+            for (var i = 0; i < jsonData.length; i++) {
+                // 创建新的表格行
+                var row = tableBody.insertRow(i);
+
+                // 创建单元格并设置单元格内容
+                var radioCell = row.insertCell(0);
+                // 为第一个单元格的单选按钮添加属性 checked
+                radioCell.innerHTML = '<input type="radio" name="edit-radio" ' + (i === 0 ? 'checked' : '') + '>';
+
+                var nameCell = row.insertCell(1);
+                nameCell.innerHTML = '<span>' + jsonData[i].name + '</span><input type="text" class="form-control d-none" name="edit_name">';
+
+                var accountCell = row.insertCell(2);
+                accountCell.innerHTML = '<span>' + jsonData[i].account + '</span><input type="text" class="form-control d-none" name="edit_account">';
+
+                var passwordCell = row.insertCell(3);
+                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" name="edit_password">';
+            }
+        }
 
         function editUser() {
             // 禁用所有单选按钮
@@ -206,7 +204,7 @@
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = true;
             }
-            
+
             radioButtonStatus = true;
 
             var newRow = document.getElementById('dataTable').insertRow(-1);
