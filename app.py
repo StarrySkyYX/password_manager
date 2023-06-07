@@ -58,19 +58,20 @@ def register():
 @app.route('/websites/home', methods=['POST', 'GET'])
 def home():
     user_agent= request.headers.get('User-Agent')
-    if 'button_edit' in request.form:
-        login_user[user_agent].edit(request.form['keyword'],request.form['account_id'],request.form['account_password'])
-        return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
-    elif 'button_add' in request.form:
-        login_user[user_agent].add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
-        return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
-    elif 'button_delete' in request.form:
-        login_user[user_agent].delete(request.form['keyword'])
+    if request.method=="POST":
+        if 'button_edit' in request.form:
+            login_user[user_agent].edit(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+            return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
+        elif 'button_add' in request.form:
+            login_user[user_agent].add(request.form['keyword'],request.form['account_id'],request.form['account_password'])
+            return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
+        elif 'button_delete' in request.form:
+            login_user[user_agent].delete(request.form['keyword'])
+            return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
+        elif 'button_logout' in request.form:
+            del login_user[user_agent]
+            return render_template("index.html")  
         return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
-    elif 'button_logout' in request.form:
-        del login_user[user_agent]
-        return render_template("index.html")  
-    return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
 
 if __name__ == '__main__':
     app.run(debug=True)
