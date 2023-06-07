@@ -13,7 +13,7 @@
 <body id="home">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="top_container">
         <div class="container-fluid">
-            <a href="./" class="navbar-brand">密碼管理</a>
+            <a href="../" class="navbar-brand">密碼管理</a>
             <ul class="navbar-nav ms-auto">
                 <form method="post">
                     <li class="nav-item">
@@ -33,7 +33,7 @@
         <div class="row">
             <div class="col-12">
                 <button type="button" class="btn btn-primary" id="editButton" onclick="editUser()">編輯</button>
-                <button type="button" class="btn btn-primary d-none" id="saveButton" onclick="saveUser()">完成</button>
+                <button type="submit" class="btn btn-primary d-none" id="saveButton" onclick="saveUser()">完成</button>
                 <button type="button" class="btn btn-primary" id="addButton" onclick="addUser()">新增</button>
                 <button type="button" class="btn btn-danger" id="deleteButton" onclick="deleteUser()">刪除</button>
             </div>
@@ -59,44 +59,64 @@
         </div>
     </div>
 
+    <!-- 模态框代码 -->
+    <div class="modal fade" id="errorModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">錯誤訊息
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalErrorMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 假设您有一个 JSON 文件，其内容如下：
-        var jsonData = [
-            {
-                "姓名": "John Doe",
-                "帳號": "johndoe123",
-                "密碼": "123"
-            },
-            {
-                "姓名": "Peggy",
-                "帳號": "peggy123",
-                "密碼": "123"
-            }
-        ];
+        var radioButtonStatus = false;
 
         // 在页面加载完成后执行以下操作
         $(document).ready(function () {
-            // 获取表格的 tbody 元素
-            var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            // 使用 AJAX 请求从服务器获取数据
+            $.ajax({
+                url: 'get_data.php', // PHP 文件用于从数据库中获取数据并返回 JSON 格式
+                method: 'GET',
+                success: function (data) {
+                    var jsonData = JSON.parse(data);
 
-            for (var i = 0; i < jsonData.length; i++) {
-                // 创建新的表格行
-                var row = tableBody.insertRow(i);
+                    // 获取表格的 tbody 元素
+                    var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
 
-                // 创建单元格并设置单元格内容
-                var radioCell = row.insertCell(0);
-                // 为第一个单元格的单选按钮添加属性 checked
-                radioCell.innerHTML = '<input type="radio" name="edit-radio" ' + (i === 0 ? 'checked' : '') + '>';
+                    for (var i = 0; i < jsonData.length; i++) {
+                        // 创建新的表格行
+                        var row = tableBody.insertRow(i);
 
-                var nameCell = row.insertCell(1);
-                nameCell.innerHTML = '<span>' + jsonData[i].姓名 + '</span><input type="text" class="form-control d-none" name="edit_name">';
+                        // 创建单元格并设置单元格内容
+                        var radioCell = row.insertCell(0);
+                        // 为第一个单元格的单选按钮添加属性 checked
+                        radioCell.innerHTML = '<input type="radio" name="edit-radio" ' + (i === 0 ? 'checked' : '') + '>';
 
-                var accountCell = row.insertCell(2);
-                accountCell.innerHTML = '<span>' + jsonData[i].帳號 + '</span><input type="text" class="form-control d-none" name="edit_account">';
+                        var nameCell = row.insertCell(1);
+                        nameCell.innerHTML = '<span>' + jsonData[i].name + '</span><input type="text" class="form-control d-none" name="edit_name">';
 
-                var passwordCell = row.insertCell(3);
-                passwordCell.innerHTML = '<span>' + jsonData[i].密碼 + '</span><input type="text" class="form-control d-none" name="edit_password">';
-            }
+                        var accountCell = row.insertCell(2);
+                        accountCell.innerHTML = '<span>' + jsonData[i].id + '</span><input type="text" class="form-control d-none" name="edit_account">';
+
+                        var passwordCell = row.insertCell(3);
+                        passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" name="edit_password">';
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    $('#errorModal').modal('show');
+                }
+            });
         });
 
         function editUser() {
@@ -105,6 +125,7 @@
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = true;
             }
+            radioButtonStatus = true;
 
             var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
             var nameCell = selectedRow.cells[1];
@@ -135,7 +156,7 @@
             // 恢复所有单选按钮的状态
             var radioButtons = document.getElementsByName('edit-radio');
             for (var i = 0; i < radioButtons.length; i++) {
-                radioButtons[i].disabled = false;
+                radioButtons[i].disabled = radioButtonStatus;
             }
 
             var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
@@ -143,10 +164,20 @@
             var accountCell = selectedRow.cells[2];
             var passwordCell = selectedRow.cells[3];
 
-            // 获取输入框的值并设置为新的内容
             var newName = nameCell.querySelector('input').value;
             var newAccount = accountCell.querySelector('input').value;
             var newPassword = passwordCell.querySelector('input').value;
+
+            if (newName === '' || newAccount === '' || newPassword === '') {
+                // 显示模态框或其他错误处理逻辑
+                $('#errorModal').modal('show');
+                return;
+            }
+
+            var radioButtons = document.getElementsByName('edit-radio');
+            for (var i = 0; i < radioButtons.length; i++) {
+                radioButtons[i].disabled = false;
+            }
 
             nameCell.querySelector('span').textContent = newName;
             accountCell.querySelector('span').textContent = newAccount;
@@ -176,6 +207,8 @@
                 radioButtons[i].disabled = true;
             }
             
+            radioButtonStatus = true;
+
             var newRow = document.getElementById('dataTable').insertRow(-1);
 
             var radioCell = newRow.insertCell(0);
