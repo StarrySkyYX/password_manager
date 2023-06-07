@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>密碼管理 | 首頁</title>
+    <link rel="icon" href="../../static/favicon.ico" type="image/x-icon" />
     <style>
         #top_container {
             background-color: #3B4B59;
@@ -125,14 +127,14 @@
             edit = true;
 
             var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
-            var nameCell = selectedRow.cells[1];
+            // var nameCell = selectedRow.cells[1];
             var accountCell = selectedRow.cells[2];
             var passwordCell = selectedRow.cells[3];
 
             // 显示输入框并将内容设置为当前值
-            nameCell.querySelector('span').classList.add('d-none');
-            nameCell.querySelector('input').classList.remove('d-none');
-            nameCell.querySelector('input').value = nameCell.querySelector('span').textContent;
+            // nameCell.querySelector('span').classList.add('d-none');
+            // nameCell.querySelector('input').classList.remove('d-none');
+            // nameCell.querySelector('input').value = nameCell.querySelector('span').textContent;
 
             accountCell.querySelector('span').classList.add('d-none');
             accountCell.querySelector('input').classList.remove('d-none');
@@ -165,12 +167,13 @@
             var newAccount = accountCell.querySelector('input').value;
             var newPassword = passwordCell.querySelector('input').value;
 
-            if (newName === '' || newAccount === '' || newPassword === '') {
-                // 显示模态框或其他错误处理逻辑
-                $('#errorModal').modal('show');
-                return;
-            }
+            
             if (add === true){
+                if (newName === '' || newAccount === '' || newPassword === '') {
+                    // 显示模态框或其他错误处理逻辑
+                    $('#errorModal').modal('show');
+                    return;
+                }
                     add = false;
                     fetch('/websites/add', {
                     method: 'POST',
@@ -196,9 +199,15 @@
                     // 处理错误
                     // ...
                 });
+                nameCell.querySelector('span').textContent = newName;
             }
 
             if (edit === true){
+                if (newAccount === '' || newPassword === '') {
+                    // 显示模态框或其他错误处理逻辑
+                    $('#errorModal').modal('show');
+                    return;
+                }
                 edit = false;
                     fetch('/websites/edit', {
                     method: 'POST',
@@ -206,7 +215,6 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        account_name: newName,
                         account_id: newAccount,
                         account_password: newPassword
                     })
@@ -232,7 +240,7 @@
                 radioButtons[i].disabled = false;
             }
 
-            nameCell.querySelector('span').textContent = newName;
+            
             accountCell.querySelector('span').textContent = newAccount;
             passwordCell.querySelector('span').textContent = newPassword;
 
