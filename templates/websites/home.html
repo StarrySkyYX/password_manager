@@ -84,6 +84,8 @@
 
     <script>
         var radioButtonStatus = false;
+        var edit = false;
+        var add = false;
         window.addEventListener('DOMContentLoaded', (event) => {
             generateTable();
         });
@@ -120,6 +122,7 @@
                 radioButtons[i].disabled = true;
             }
             radioButtonStatus = true;
+            edit = true;
 
             var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             var nameCell = selectedRow.cells[1];
@@ -167,31 +170,62 @@
                 $('#errorModal').modal('show');
                 return;
             }
-
-            fetch('/wesites/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    account_name: newName,
-                    account_id: newAccount,
-                    account_password: newPassword
+            if (add === true){
+                    add = false;
+                    fetch('/websites/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        account_name: newName,
+                        account_id: newAccount,
+                        account_password: newPassword
+                    })
                 })
-            })
-            .then(response => {
-                if (response.ok) {
-                    // 处理成功响应
+                .then(response => {
+                    if (response.ok) {
+                        // 处理成功响应
+                        // ...
+                    } else {
+                        throw new Error('请求失败');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    // 处理错误
                     // ...
-                } else {
-                    throw new Error('请求失败');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                // 处理错误
-                // ...
-            });
+                });
+            }
+
+            if (edit === true){
+                edit = false;
+                    fetch('/websites/edit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        account_name: newName,
+                        account_id: newAccount,
+                        account_password: newPassword
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // 处理成功响应
+                        // ...
+                    } else {
+                        throw new Error('请求失败');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    // 处理错误
+                    // ...
+                });
+            }
+           
 
             var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
@@ -227,6 +261,7 @@
             }
 
             radioButtonStatus = true;
+            add = true;
 
             var newRow = document.getElementById('dataTable').insertRow(-1);
 
