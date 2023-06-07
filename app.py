@@ -62,7 +62,7 @@ def home():
         if 'button_logout' in request.form:
             del login_user[user_agent]
             return render_template("index.html")  
-        # return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
+        return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
     
 
 @app.route('/websites/delete', methods=['POST', 'GET'])   
