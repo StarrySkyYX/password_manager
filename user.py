@@ -109,11 +109,11 @@ class User:
         query = '''SELECT * FROM {}'''.format(name)
         cursor.execute(query)
         rows = cursor.fetchall()
-        result={}
+        result=[]
         for row_tuple in rows:
-            result[row_tuple[0]]={
+            result.append({
                 "name":row_tuple[0],
                 "id":row_tuple[1],
             "password":row_tuple[2]
-                                }
+                                })
         return result
