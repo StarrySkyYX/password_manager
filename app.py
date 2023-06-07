@@ -22,7 +22,7 @@ def login():
         password=request.form['password']
         if User.check_login(user_mail,password):
             session[user_mail]=User(user_mail)
-            user_name=session[user_mail].name
+            user_name=json.dumps(session[user_mail].name)
             user_info=json.dumps(session[user_mail].load())
             return render_template("/websites/home.html",user_name=user_name,user_info=user_info)
         else:
@@ -54,8 +54,7 @@ def register():
             User.add_table(user_name)
             User.insert_user(user_mail,password,user_name)
             session[user_mail]=User(user_mail)
-            user_info=json.dumps(session[user_mail].load())
-            return render_template("/websites/home.html", user_name=session[user_mail].name,user_info=user_info)
+            return render_template("/websites/home.html", user_name=session[user_mail].name,user_info=session[user_mail].load())
     return render_template('/websites/register.html',error=error)
     
 # 
@@ -104,6 +103,5 @@ atexit.register(clear_session)
 
 
 
-   
 
 
