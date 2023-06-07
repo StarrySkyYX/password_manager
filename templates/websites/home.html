@@ -31,22 +31,23 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-primary" id="editButton" onclick="editUser()">編輯</button>
-                <button type="button" class="btn btn-primary d-none" id="saveButton" onclick="saveUser()">完成</button>
-                <button type="button" class="btn btn-primary" id="addButton" onclick="addUser()">新增</button>
-                <button type="button" class="btn btn-danger" id="deleteButton" onclick="deleteUser()">刪除</button>
+                <button type="button" class="btn btn-secondary" id="editButton" onclick="editUser()">編輯</button>
+                <button type="submit" class="btn btn-secondary d-none" id="saveButton" onclick="saveUser()" value="button_complete" name="button_complete">完成</button>
+                <button type="button" class="btn btn-secondary" id="addButton" onclick="addUser()">新增</button>
+                <button type="submit" class="btn btn-danger" id="deleteButton" onclick="deleteUser()" value="button_delete" name="button_delete">刪除</button>
             </div>
         </div>
+        {{user_info}}
         <div class="row mt-4">
             <div class="col-12">
                 <form id="userForm">
                     <table class="table" id="dataTable">
                         <thead>
                             <tr>
-                                <th>{{user_info}}</th>
-                                <th>姓名</th>
-                                <th>帳號</th>
-                                <th>密碼</th>
+                                <th class="col-1"></th>
+                                <th class="col-3">姓名</th>
+                                <th class="col-4">帳號</th>
+                                <th class="col-4">密碼</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,7 +68,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p id="modalErrorMessage"></p>
+                    <p id="modalErrorMessage">輸入欄位不得為空白</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
@@ -78,6 +79,9 @@
 
     <script>
         var radioButtonStatus = false;
+        window.addEventListener('DOMContentLoaded', (event) => {
+            generateTable();
+        });
         var jsonData = {{ user_info | tojson }};
 
         function generateTable() {
@@ -91,28 +95,28 @@
                 // 创建单元格并设置单元格内容
                 var radioCell = row.insertCell(0);
                 // 为第一个单元格的单选按钮添加属性 checked
-                radioCell.innerHTML = '<input type="radio" name="edit-radio" ' + (i === 0 ? 'checked' : '') + '>';
+                radioCell.innerHTML = '<input type="radio" name="keyword"' + (i === 0 ? 'checked' : '') + '>';
 
                 var nameCell = row.insertCell(1);
-                nameCell.innerHTML = '<span>' + jsonData[i].name + '</span><input type="text" class="form-control d-none" name="edit_name">';
+                nameCell.innerHTML = '<span>' + jsonData[i].name + '</span><input type="text" class="form-control d-none" name="keyword">';
 
                 var accountCell = row.insertCell(2);
-                accountCell.innerHTML = '<span>' + jsonData[i].account + '</span><input type="text" class="form-control d-none" name="edit_account">';
+                accountCell.innerHTML = '<span>' + jsonData[i].id + '</span><input type="text" class="form-control d-none" name="account_id">';
 
                 var passwordCell = row.insertCell(3);
-                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" name="edit_password">';
+                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" name="account_password">';
             }
         }
 
         function editUser() {
             // 禁用所有单选按钮
-            var radioButtons = document.getElementsByName('edit-radio');
+            var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = true;
             }
             radioButtonStatus = true;
 
-            var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
+            var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             var nameCell = selectedRow.cells[1];
             var accountCell = selectedRow.cells[2];
             var passwordCell = selectedRow.cells[3];
@@ -139,12 +143,12 @@
 
         function saveUser() {
             // 恢复所有单选按钮的状态
-            var radioButtons = document.getElementsByName('edit-radio');
+            var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = radioButtonStatus;
             }
 
-            var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
+            var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             var nameCell = selectedRow.cells[1];
             var accountCell = selectedRow.cells[2];
             var passwordCell = selectedRow.cells[3];
@@ -159,7 +163,7 @@
                 return;
             }
 
-            var radioButtons = document.getElementsByName('edit-radio');
+            var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = false;
             }
@@ -187,7 +191,7 @@
 
         function addUser() {
             // 禁用所有单选按钮
-            var radioButtons = document.getElementsByName('edit-radio');
+            var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = true;
             }
@@ -197,7 +201,7 @@
             var newRow = document.getElementById('dataTable').insertRow(-1);
 
             var radioCell = newRow.insertCell(0);
-            radioCell.innerHTML = '<input type="radio" name="edit-radio" checked>';
+            radioCell.innerHTML = '<input type="radio" name="keyword" checked>';
 
             var nameCell = newRow.insertCell(1);
             nameCell.innerHTML = '<span></span><input type="text" class="form-control" name="new_name">';
@@ -216,7 +220,7 @@
         }
 
         function deleteUser() {
-            var selectedRow = document.querySelector('input[name="edit-radio"]:checked').parentNode.parentNode;
+            var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             selectedRow.parentNode.removeChild(selectedRow);
 
             // 隐藏完成按钮，显示编辑、新增和删除按钮
