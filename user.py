@@ -19,7 +19,7 @@ class User:
         """
         with sqlite3.connect('data/password_manager.db', check_same_thread=False) as conn:
             cursor=conn.cursor()
-            delete_sql_row='''DELETE FROM table_name WHERE name=?'''.replace('table_name',self.name)
+            delete_sql_row='''DELETE FROM {} WHERE name=?'''.format(self.name)
             cursor.execute(delete_sql_row,(delete_keyword,))
             conn.commit()
         
