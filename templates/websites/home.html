@@ -95,16 +95,16 @@
         var jsonData = {{ user_info | tojson }};
 
         function generateTable() {
-            // 获取表格的 tbody 元素
+            // 獲取表格的 tbody 元素
             var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
 
             for (var i = 0; i < jsonData.length; i++) {
-                // 创建新的表格行
+                // 建立新的表格行
                 var row = tableBody.insertRow(i);
 
-                // 创建单元格并设置单元格内容
+                // 建立單元格并設置單元格内容
                 var radioCell = row.insertCell(0);
-                // 为第一个单元格的单选按钮添加属性 checked
+                // 為第一个單元格的單選按鈕添加屬性 checked
                 radioCell.innerHTML = '<input type="radio" name="keyword" style="margin-left:1rem;"' + (i === 0 ? 'checked' : '') + '>';
 
                 var nameCell = row.insertCell(1);
@@ -153,7 +153,7 @@
         }
 
         function saveUser() {
-            // 恢复所有单选按钮的状态
+            // 恢復所有單選按鈕的狀態
             var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = radioButtonStatus;
@@ -171,7 +171,7 @@
             
             if (add === true){
                 if (newName === '' || newAccount === '' || newPassword === '') {
-                    // 显示模态框或其他错误处理逻辑
+                    // 顯示模態框或其他錯誤處理邏輯
                     $('#errorModal').modal('show');
                     return;
                 }
@@ -189,15 +189,15 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // 处理成功响应
+                        // 處理成功響應
                         // ...
                     } else {
-                        throw new Error('请求失败');
+                        throw new Error('請求失敗');
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    // 处理错误
+                    // 處理錯誤
                     // ...
                 });
                 nameCell.querySelector('span').textContent = newName;
@@ -205,7 +205,7 @@
 
             if (edit === true){
                 if (newAccount === '' || newPassword === '') {
-                    // 显示模态框或其他错误处理逻辑
+                    // 顯示模態框或其他錯誤處理邏輯
                     $('#errorModal').modal('show');
                     return;
                 }
@@ -222,10 +222,10 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // 处理成功响应
+                        // 處理成功響應
                         // ...
                     } else {
-                        throw new Error('请求失败');
+                        throw new Error('請求失敗');
                     }
                 })
                 .catch(error => {
@@ -245,7 +245,7 @@
             accountCell.querySelector('span').textContent = newAccount;
             passwordCell.querySelector('span').textContent = newPassword;
 
-            // 隐藏输入框，显示文本内容
+            // 隱藏輸入框，顯示文本內容
             nameCell.querySelector('span').classList.remove('d-none');
             nameCell.querySelector('input').classList.add('d-none');
 
@@ -255,7 +255,7 @@
             passwordCell.querySelector('span').classList.remove('d-none');
             passwordCell.querySelector('input').classList.add('d-none');
 
-            // 隐藏完成按钮，显示编辑、新增和删除按钮
+            // 隱藏完成按鈕，顯示編輯、新增和刪除按鈕
             document.getElementById('editButton').classList.remove('d-none');
             document.getElementById('addButton').classList.remove('d-none');
             document.getElementById('deleteButton').classList.remove('d-none');
@@ -263,7 +263,7 @@
         }
 
         function addUser() {
-            // 禁用所有单选按钮
+            // 禁用所有單選按鈕
             var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = true;
@@ -286,7 +286,7 @@
             var passwordCell = newRow.insertCell(3);
             passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_password">';
 
-            // 隐藏编辑按钮，显示完成按钮
+            // 隱藏完成按鈕，顯示完成按鈕
             document.getElementById('editButton').classList.add('d-none');
             document.getElementById('addButton').classList.add('d-none');
             document.getElementById('deleteButton').classList.add('d-none');
@@ -298,7 +298,7 @@
             selectedRow.parentNode.removeChild(selectedRow);
             var keyword = selectedRow.cells[1].querySelector('span').textContent;
 
-            // 使用fetch发送异步请求到后端
+            // 使用fetch發送異步請求至後端
             fetch('/websites/delete', {
                 method: 'POST',
                 headers: {
@@ -310,15 +310,15 @@
                 if (response.ok) {
                     selectedRow.parentNode.removeChild(selectedRow);
                 } else {
-                    throw new Error('删除请求失败');
+                    throw new Error('刪除請求失敗');
                 }
             })
             .catch(error => {
                 console.error(error);
-                // 处理错误
+                // 處理錯誤
             });
 
-            // 隐藏完成按钮，显示编辑、新增和删除按钮
+            // 隱藏完成按鈕，顯示編輯、新增和刪除按鈕
             document.getElementById('editButton').classList.remove('d-none');
             document.getElementById('addButton').classList.remove('d-none');
             document.getElementById('deleteButton').classList.remove('d-none');
