@@ -45,7 +45,7 @@
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             var screenWidth = window.innerWidth;
 
-            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth < 768)) {
+            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth > 768)) {
                 navbar.style.backgroundColor = 'transparent';
             } else {
                 navbar.style.backgroundColor = 'rgba(59, 75, 89, 1)';
@@ -61,7 +61,7 @@
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             var screenWidth = window.innerWidth;
 
-            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth < 768)) {
+            if (scrollTop === 0 && (navbarToggle.offsetParent === null || screenWidth > 768)) {
                 navbar.style.backgroundColor = 'transparent';
             } else {
                 navbar.style.backgroundColor = 'rgba(59, 75, 89, 1)';
@@ -84,7 +84,7 @@
                 <li class="nav-item"><a class="nav-link" href="#">首頁</a></li>
                 <li class="nav-item"><a class="nav-link" href="#anchor">介紹</a></li>
                 <li class="nav-item"><a class="nav-link" href="#anchor-2">關於我們</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">聯絡我們</a></li>
+                <li class="nav-item"><a class="nav-link" href="#anchor-3">聯絡我們</a></li>
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -114,29 +114,70 @@
     </div>
 </div>
 <a id="anchor-2"></a>
-<div class="container-fluid" style="display: flex;justify-content: center;background-color: #232e37;padding: 2rem 0 2rem 0;">
-    <h1 style="color: #fff;">關於我們</h1><hr style="border: 3px solid #fff;">
+<div class="container-fluid" style="display: flex;justify-content: center;background-color: #232e37;padding-top: 4rem;">
+    <div class="col-6" style="text-align: center;">
+        <h1 style="color: #fff;">關於我們</h1><hr style="border: 3px solid #fff;">
+    </div>
 </div>
-<div class="container-fluid flex-wrap justify-content-center" style="display: flex;justify-content: center;background-color: #232e37;padding: 2rem 0 2rem 0;">
+<div class="container-fluid flex-wrap justify-content-center" style="display: flex;justify-content: center;background-color: #232e37;padding-bottom: 4rem;">
     <div class="card rounded-4" style="width:20rem;margin: 1rem;">
         <img  class="card-img-top rounded-2" src="./static/008uQrgaly1hax0un55lej32yo1o07wh.jpg" style="width: auto;margin: 1rem 1rem 0 1rem;">
         <div class="card-body">
-            <h4 class="card-title" style="text-align: center;"> ---- 許依茹 ----</h4>
-            <p class="card-text">● PPT製作<br>● 上台報告</p>
+            <h4 class="card-title" style="text-align: center;"> ------ 許依茹 ------</h4>
+            <p class="card-text">● PPT製作　● Python程式設計(次要)<br>● 上台報告<br></p>
         </div>
     </div>
     <div class="card rounded-4" style="width:20rem;margin: 1rem;">
         <img  class="card-img-top rounded-2" src="./static/18_20230607232457.png" style="width: auto;margin: 1rem 1rem 0 1rem;">
         <div class="card-body">
-            <h4 class="card-title" style="text-align: center;"> ---- 吳芋嫻 ----</h4>
-            <p class="card-text">● PPT製作<br>● 上台報告</p>
+            <h4 class="card-title" style="text-align: center;"> ------ 吳芋嫻 ------</h4>
+            <p class="card-text">● Python程式設計(主要)<br>● 上台報告</p>
         </div>
     </div>
     <div class="card rounded-4" style="width:20rem;margin: 1rem;">
-        <img  class="card-img-top rounded-2" src="./static/008uQrgaly1hax0un55lej32yo1o07wh.jpg" style="width: auto;margin: 1rem 1rem 0 1rem;">
+        <img  class="card-img-top rounded-2" src="./static/18_20230608002643.png" style="width: auto;margin: 1rem 1rem 0 1rem;">
         <div class="card-body">
-            <h4 class="card-title" style="text-align: center;"> ---- 陳佩琦 ----</h4>
-            <p class="card-text">● PPT製作<br>● 上台報告</p>
+            <h4 class="card-title" style="text-align: center;"> ------ 陳佩琦 ------</h4>
+            <p class="card-text">● 網頁程式設計<br>● 上台報告</p>
+        </div>
+    </div>
+</div>
+<a id="anchor-3"></a>
+<div class="container-fluid" style="display: flex; justify-content: center;">
+    <div class="col-6">
+        <div id="contact" style="background-color: #fff; padding: 2rem;">
+            <h1>聯絡我們</h1>
+            <form action="/contact" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">電子郵件：</label>
+                    <input type="email" class="form-control" name="email" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">主旨：</label>
+                    <input type="text" class="form-control" name="subject" id="subject" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">內容：</label>
+                    <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">送出</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">錯誤訊息</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalErrorMessage" class="text-danger" style="font-weight:bold;">查無此人，但你可以問問神奇海螺</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">關閉</button>
+            </div>
         </div>
     </div>
 </div>
