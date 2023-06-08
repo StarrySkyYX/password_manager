@@ -120,7 +120,7 @@ class User:
             cursor.execute(add_sql_table)
 
     @staticmethod   
-    def load(user_name):
+    def load(user_name)->list:
         """Load user stored information.
         :param user_name: Name of the user.
         """
