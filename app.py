@@ -69,7 +69,10 @@ def home():
 def delete():
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
-        login_user[user_agent].delete(request.json.get('account_name'))
+        # By GPT_0608
+        account_name = request.form.get('account_name')  # 從表單中獲取要刪除的帳號名稱
+        if account_name:
+            login_user[user_agent].delete(account_name)  # 呼叫 User 物件的 delete 方法
         return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
     
 @app.route('/websites/add', methods=['POST', 'GET'])   
@@ -83,11 +86,13 @@ def add():
 def edit():
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
-        login_user[user_agent].edit(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
-        return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
-    
-    
-
+        # By GPT_0608
+        account_name = request.form.get('account_name')  # 從表單中獲取要編輯的帳號名稱
+        account_id = request.form.get('account_id')  # 從表單中獲取要編輯的帳號ID
+        account_password = request.form.get('account_password')  # 從表單中獲取要編輯的帳號密碼
+        if account_name and account_id and account_password:
+            login_user[user_agent].edit(account_name, account_id, account_password)  # 呼叫 User 物件的 edit 方法
+        return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name)
 
 if __name__ == '__main__':
     app.run(debug=True)
