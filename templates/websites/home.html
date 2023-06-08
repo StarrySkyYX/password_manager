@@ -183,9 +183,8 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        
                     } else {
-                        throw new Error('请求失败');
+                        throw new Error('請求失敗');
                     }
                 })
                 .catch(error => {
@@ -214,7 +213,7 @@
                 .then(response => {
                     if (response.ok) {
                     } else {
-                        throw new Error('请求失败');
+                        throw new Error('請求失敗');
                     }
                 })
                 .catch(error => {
@@ -232,7 +231,6 @@
             accountCell.querySelector('span').textContent = newAccount;
             passwordCell.querySelector('span').textContent = newPassword;
 
-            // To hide an input field and display text content
             nameCell.querySelector('span').classList.remove('d-none');
             nameCell.querySelector('input').classList.add('d-none');
 
@@ -297,7 +295,7 @@
                 if (response.ok) {
                     selectedRow.parentNode.removeChild(selectedRow);
                 } else {
-                    throw new Error('删除请求失败');
+                    throw new Error('刪除請求失敗');
                 }
             })
             .catch(error => {
@@ -305,6 +303,7 @@
             });
 
             // Hide the "Complete" button and show the "Edit", "Add", and "Delete" buttons
+
             document.getElementById('editButton').classList.remove('d-none');
             document.getElementById('addButton').classList.remove('d-none');
             document.getElementById('deleteButton').classList.remove('d-none');
