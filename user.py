@@ -11,6 +11,7 @@ class User:
             self.mail=user_mail
             query='''SELECT name FROM Users WHERE mail=?'''
             self.name=''.join(cursor.execute(query, (self.mail,)).fetchall()[0])
+            conn.commit()
             
     def delete(self,delete_keyword):
         """Delete the ID and password stored by the user.
@@ -18,8 +19,9 @@ class User:
         """
         with sqlite3.connect('data/password_manager.db', check_same_thread=False) as conn:
             cursor=conn.cursor()
-            delete_sql_row='''DELETE FROM {} WHERE name=?;'''.format(self.name)
+            delete_sql_row='''DELETE FROM table_name WHERE name=?'''.replace('table_name',self.name)
             cursor.execute(delete_sql_row,(delete_keyword,))
+            conn.commit()
         
     def add(self,account_name,account_id,account_password):
         """Add the ID and password stored by the user.
@@ -31,6 +33,7 @@ class User:
             cursor=conn.cursor()
             insert_user='''INSERT INTO {} VALUES (?,?,?)'''.format(self.name)
             cursor.execute(insert_user,(account_name,account_id,account_password,))
+            conn.commit()
     
     def edit(self,account_name,account_id,account_password):
         """Edit the ID and password stored by the user.
@@ -42,6 +45,7 @@ class User:
             cursor=conn.cursor()
             edit_sql_str='''UPDATE {} SET id = ?, password = ? WHERE name = ?;'''.format(self.name)
             cursor.execute(edit_sql_str,(account_id,account_password,account_name,))
+            conn.commit()
        
     @staticmethod
     def check_login(user_mail,password):
@@ -101,6 +105,7 @@ class User:
             cursor=conn.cursor()
             insert_user='''INSERT INTO Users VALUES (?,?,?)'''
             cursor.execute(insert_user,(user_mail,password,user_name,))
+            conn.commit()
 
     @staticmethod
     def add_table(user_name):
@@ -118,6 +123,7 @@ class User:
                 )
             '''.format(user_name)
             cursor.execute(add_sql_table)
+            conn.commit()
 
     @staticmethod   
     def load(user_name)->list:
