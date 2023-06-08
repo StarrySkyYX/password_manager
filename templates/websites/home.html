@@ -56,7 +56,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- 表格内容将通过 JavaScript 动态生成 -->
+                            <!-- The table content will be dynamically generated using JavaScript -->
                         </tbody>
                     </table>
                 </form>
@@ -67,7 +67,7 @@
         <p>網站圖片由Mikhail Nilov提供</p>
     </div>
 
-    <!-- 模态框代码 -->
+    <!-- Modal dialog code -->
     <div class="modal fade" id="errorModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -95,16 +95,16 @@
         var jsonData = {{ user_info | tojson }};
 
         function generateTable() {
-            // 获取表格的 tbody 元素
+            // Get the tbody element of the table
             var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
 
             for (var i = 0; i < jsonData.length; i++) {
-                // 创建新的表格行
+                // Create a new table row
                 var row = tableBody.insertRow(i);
 
-                // 创建单元格并设置单元格内容
+                // Create a cell and set its content
                 var radioCell = row.insertCell(0);
-                // 为第一个单元格的单选按钮添加属性 checked
+                // Add the checked attribute to the radio button in the first cell
                 radioCell.innerHTML = '<input type="radio" name="keyword" style="margin-left:1rem;"' + (i === 0 ? 'checked' : '') + '>';
 
                 var nameCell = row.insertCell(1);
@@ -119,7 +119,7 @@
         }
 
         function editUser() {
-            // 禁用所有单选按钮
+            // Disable all radio buttons
             var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = true;
@@ -128,14 +128,8 @@
             edit = true;
 
             var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
-            // var nameCell = selectedRow.cells[1];
             var accountCell = selectedRow.cells[2];
             var passwordCell = selectedRow.cells[3];
-
-            // 显示输入框并将内容设置为当前值
-            // nameCell.querySelector('span').classList.add('d-none');
-            // nameCell.querySelector('input').classList.remove('d-none');
-            // nameCell.querySelector('input').value = nameCell.querySelector('span').textContent;
 
             accountCell.querySelector('span').classList.add('d-none');
             accountCell.querySelector('input').classList.remove('d-none');
@@ -145,7 +139,7 @@
             passwordCell.querySelector('input').classList.remove('d-none');
             passwordCell.querySelector('input').value = passwordCell.querySelector('span').textContent;
 
-            // 隐藏编辑按钮，显示完成按钮
+            // Hide the edit button and display the done button
             document.getElementById('editButton').classList.add('d-none');
             document.getElementById('addButton').classList.add('d-none');
             document.getElementById('deleteButton').classList.add('d-none');
@@ -153,7 +147,7 @@
         }
 
         function saveUser() {
-            // 恢复所有单选按钮的状态
+            // To restore the state of all radio buttons
             var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = radioButtonStatus;
@@ -171,7 +165,7 @@
             
             if (add === true){
                 if (newName === '' || newAccount === '' || newPassword === '') {
-                    // 显示模态框或其他错误处理逻辑
+                    // To display a modal or implement other error handling logic
                     $('#errorModal').modal('show');
                     return;
                 }
@@ -189,23 +183,20 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // 处理成功响应
-                        // ...
+                        
                     } else {
                         throw new Error('请求失败');
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    // 处理错误
-                    // ...
                 });
                 nameCell.querySelector('span').textContent = newName;
             }
 
             if (edit === true){
                 if (newAccount === '' || newPassword === '') {
-                    // 显示模态框或其他错误处理逻辑
+                    // To display a modal or implement other error handling logic
                     $('#errorModal').modal('show');
                     return;
                 }
@@ -222,16 +213,12 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // 处理成功响应
-                        // ...
                     } else {
                         throw new Error('请求失败');
                     }
                 })
                 .catch(error => {
                     console.error(error);
-                    // 处理错误
-                    // ...
                 });
             }
            
@@ -245,7 +232,7 @@
             accountCell.querySelector('span').textContent = newAccount;
             passwordCell.querySelector('span').textContent = newPassword;
 
-            // 隐藏输入框，显示文本内容
+            // To hide an input field and display text content
             nameCell.querySelector('span').classList.remove('d-none');
             nameCell.querySelector('input').classList.add('d-none');
 
@@ -255,7 +242,7 @@
             passwordCell.querySelector('span').classList.remove('d-none');
             passwordCell.querySelector('input').classList.add('d-none');
 
-            // 隐藏完成按钮，显示编辑、新增和删除按钮
+            // Hide the "Complete" button and show the "Edit", "Add", and "Delete" buttons
             document.getElementById('editButton').classList.remove('d-none');
             document.getElementById('addButton').classList.remove('d-none');
             document.getElementById('deleteButton').classList.remove('d-none');
@@ -263,7 +250,7 @@
         }
 
         function addUser() {
-            // 禁用所有单选按钮
+            // Disable all radio buttons
             var radioButtons = document.getElementsByName('keyword');
             for (var i = 0; i < radioButtons.length; i++) {
                 radioButtons[i].disabled = true;
@@ -286,7 +273,7 @@
             var passwordCell = newRow.insertCell(3);
             passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_password">';
 
-            // 隐藏编辑按钮，显示完成按钮
+            // Hide the "Edit" button and show the "Finish" button
             document.getElementById('editButton').classList.add('d-none');
             document.getElementById('addButton').classList.add('d-none');
             document.getElementById('deleteButton').classList.add('d-none');
@@ -298,7 +285,7 @@
             selectedRow.parentNode.removeChild(selectedRow);
             var keyword = selectedRow.cells[1].querySelector('span').textContent;
 
-            // 使用fetch发送异步请求到后端
+            // You can use the fetch function to send asynchronous requests to the backend
             fetch('/websites/delete', {
                 method: 'POST',
                 headers: {
@@ -315,10 +302,9 @@
             })
             .catch(error => {
                 console.error(error);
-                // 处理错误
             });
 
-            // 隐藏完成按钮，显示编辑、新增和删除按钮
+            // Hide the "Complete" button and show the "Edit", "Add", and "Delete" buttons
             document.getElementById('editButton').classList.remove('d-none');
             document.getElementById('addButton').classList.remove('d-none');
             document.getElementById('deleteButton').classList.remove('d-none');
