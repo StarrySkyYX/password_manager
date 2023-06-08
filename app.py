@@ -1,5 +1,6 @@
 from flask import Flask,request,render_template
 from user import User
+from flask_mail import Mail, Message
 
 
 app = Flask(__name__)
@@ -84,7 +85,33 @@ def edit():
         login_user[user_agent].edit(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
     return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
     
-    
+# 設定郵件相關參數
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'peggyellachen585@gmail.com'  # 使用者的 Gmail 信箱
+app.config['MAIL_PASSWORD'] = 'rehhigyqymkwnbwq'  # 使用者的 Gmail 密碼
+
+mail = Mail(app)
+
+# 定义联系页面的路由和处理函数
+@app.route('/', methods=['POST'])
+def contact():
+    if request.method == 'POST':
+        email = request.form['email']
+        subject = request.form['subject']
+        content = request.form['content']
+
+        content = f"from:{email}\n\n{content}"
+
+        # 创建邮件消息
+        msg = Message(subject=subject, sender=email, recipients=['peggyellachen585@gmail.com'])
+        msg.body = content
+
+        # 发送邮件
+        with app.app_context():
+            mail.send(msg)
+        return render_template('index.html')
 
 
 if __name__ == '__main__':
