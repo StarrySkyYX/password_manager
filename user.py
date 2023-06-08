@@ -23,14 +23,12 @@ class User:
     # 參數化查詢的改進版本
 >>>>>>> a4c188747c40a0df4ec0190ed5fe7641daff7910
     def delete(self, delete_keyword):
-        conn = sqlite3.connect('data/password_manager.db')
+        # By GPT_0608
+        with sqlite3.connect('data/password_manager.db', check_same_thread=False) as conn:
         cursor = conn.cursor()
-        delete_sql_row = '''DELETE FROM {} WHERE name=:name'''.format(self.name)
-        cursor.execute(delete_sql_row, {"name": delete_keyword})
-        conn.commit()
+        delete_sql_row = '''DELETE FROM {} WHERE name = ?;'''.format(self.name)
+        cursor.execute(delete_sql_row, (delete_keyword,))
 <<<<<<< HEAD
-        conn.close()
-
 =======
 >>>>>>> a4c188747c40a0df4ec0190ed5fe7641daff7910
         
@@ -43,11 +41,11 @@ class User:
 
 
     def edit(self,account_name,account_id,account_password):
-        conn = sqlite3.connect('data/password_manager.db')
-        cursor=conn.cursor()
-        edit_sql_str='''UPDATE {} SET id = ?, password = ? WHERE name = ?'''.format(self.name)
-        cursor.execute(edit_sql_str,(account_id,account_password,account_name,))
-        conn.commit()
+        # By GPT_0608
+        with sqlite3.connect('data/password_manager.db', check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        edit_sql_str = '''UPDATE {} SET id = ?, password = ? WHERE name = ?;'''.format(self.name)
+        cursor.execute(edit_sql_str, (account_id, account_password, account_name,))
 
     
 
