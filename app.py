@@ -3,10 +3,8 @@ from flask import request
 from flask import render_template
 from user import User
 
-
 app = Flask(__name__)
 login_user={}
-
 
 @app.route('/', methods=['POST', 'GET'])
 def load_index():
@@ -16,7 +14,7 @@ def load_index():
 
 @app.route('/websites/login', methods=['POST', 'GET'])
 def login():
-    '''Handle the login functionality.'''
+    '''Handle the login function.'''
     error=""
     if request.method=="POST":
         user_mail=request.form['user_mail']
@@ -32,7 +30,7 @@ def login():
 # 
 @app.route('/websites/register', methods=['POST', 'GET'])
 def register():
-    '''Handle the registration functionality.'''
+    '''Handle the registration function.'''
     error=""
     # 一開始if語句嵌套過多層，可讀性差，詢問chatGPT解決辦法，他提議以elif來改善
     if request.method=="POST":
@@ -74,6 +72,7 @@ def home():
 
 @app.route('/websites/delete', methods=['POST'])   
 def delete():
+    '''Handle user requests to delete data.'''
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
         login_user[user_agent].delete(request.json.get('account_name'))
@@ -81,6 +80,7 @@ def delete():
     
 @app.route('/websites/add', methods=['POST'])   
 def add():
+    '''Handle user requests to add data.'''
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
         login_user[user_agent].add(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
@@ -88,6 +88,7 @@ def add():
     
 @app.route('/websites/edit', methods=['POST'])   
 def edit():
+    '''Handle user requests to edit data.'''
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
         login_user[user_agent].edit(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
