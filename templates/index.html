@@ -143,11 +143,11 @@
     </div>
 </div>
 <a id="anchor-3"></a>
-<div class="container-fluid" style="display: flex; justify-content: center;">
-    <div class="col-6">
-        <div id="contact" style="background-color: #fff; padding: 2rem;">
-            <h1>聯絡我們</h1>
-            <form action="/contact" method="post">
+<div class="container-fluid" style="display: flex; justify-content: center;padding: 4rem 0 4rem 0;background-image: url(./static/19_20230608015345.png);background-repeat: no-repeat;background-position: center;background-size: cover;background-attachment: fixed">
+    <div class="col-6 rounded-4" style="padding: 3rem;background-color: rgba(255, 255, 255, 0.5);">
+        <div id="contact" style="padding: 2rem;">
+            <h1 style="margin-bottom: 1rem;">聯絡我們</h1>
+            <form action="/" method="post">
                 <div class="mb-3">
                     <label for="email" class="form-label">電子郵件：</label>
                     <input type="email" class="form-control" name="email" id="email" required>
@@ -160,24 +160,8 @@
                     <label for="content" class="form-label">內容：</label>
                     <textarea class="form-control" name="content" id="content" rows="5" required></textarea>
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">送出</button>
+                <button type="submit" class="btn btn-dark" style="padding:0.375rem 3rem;" >送出</button>
             </form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">錯誤訊息</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p id="modalErrorMessage" class="text-danger" style="font-weight:bold;">查無此人，但你可以問問神奇海螺</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">關閉</button>
-            </div>
         </div>
     </div>
 </div>
