@@ -23,11 +23,12 @@ def login():
             # 詢問ChatGPT，因為不知道怎麼區分不同使用者
             user_agent= request.headers.get('User-Agent')
             login_user[user_agent]=User(user_mail)
-            return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
+            return render_template('/websites/home.html',
+                                    user_info=User.load(login_user[user_agent].name))
         else:
             error="無效的使用者名稱/密碼"
     return render_template('/websites/login.html',error=error)
-# 
+
 @app.route('/websites/register', methods=['POST', 'GET'])
 def register():
     '''Handle the registration function.'''
@@ -55,9 +56,9 @@ def register():
             User.insert_user(user_mail,password,user_name)
             user_agent= request.headers.get('User-Agent')
             login_user[user_agent]=User(user_mail)
-            return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
+            return render_template('/websites/home.html',
+                                    user_info=User.load(login_user[user_agent].name))
     return render_template('/websites/register.html', error=error)
-
 
 @app.route('/websites/home', methods=['POST'])
 def home():
