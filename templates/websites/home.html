@@ -63,6 +63,7 @@
             </div>
         </div>
     </div>
+    <div id="result" style="color: #fff;"></div>
     <div class="mt-5 p-4 text-white text-center" style="background-color: #3b4b59;">
         <p>網站圖片由Mikhail Nilov提供</p>
     </div>
@@ -206,6 +207,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        account_name:nameCell.querySelector('span').textContent,
                         account_id: newAccount,
                         account_password: newPassword
                     })
@@ -220,6 +222,14 @@
                     console.error(error);
                 });
             }
+
+            var variable = nameCell.querySelector('span').textContent;  // 假設這是要顯示的變數
+
+            // 取得要顯示變數值的元素
+            var resultElement = document.getElementById("result");
+
+            // 設定該元素的內容為變數的值
+            resultElement.textContent = variable;
            
 
             var radioButtons = document.getElementsByName('keyword');
@@ -289,7 +299,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ keyword: keyword })
+                body: JSON.stringify({ account_name: keyword })
             })
             .then(response => {
                 if (response.ok) {
