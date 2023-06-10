@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import render_template
+import sys
 from user import User
 
 app = Flask(__name__)
@@ -69,8 +70,9 @@ def home():
          # 因不清楚Button在request.form所儲存的key-value，因此向chatGPT詢問 
         if 'button_logout' in request.form:
             del login_user[user_agent]
-            return render_template("index.html")  
-        return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
+            sys.exit()
+        else:
+            return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
 
 @app.route('/websites/delete', methods=['POST'])   
 def delete():
