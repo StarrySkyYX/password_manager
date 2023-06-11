@@ -100,11 +100,11 @@ def edit():
 
 
 # 這邊是茹傳給我的，可是好像有錯
-@staticmethod
-def random_password(length):
-    # characters儲存所有可用字符，.ascii_letters:大小寫字母；.digits:數字
-    characters = string.asciiletters + string.digits + "."
-    return ''.join(random.choice(characters) for  in range(length))
+# @staticmethod
+# def random_password(length):
+#     # characters儲存所有可用字符，.ascii_letters:大小寫字母；.digits:數字
+#     characters = string.asciiletters + string.digits + "."
+#     return ''.join(random.choice(characters) for  in range(length))
     
 
 if __name__ == '__main__':

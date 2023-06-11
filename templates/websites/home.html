@@ -50,9 +50,10 @@
                         <thead>
                             <tr>
                                 <th class="col-1"></th>
-                                <th class="col-3">姓名</th>
+                                <th class="col-2">姓名</th>
                                 <th class="col-4">帳號</th>
                                 <th class="col-4">密碼</th>
+                                <th class="col-1"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -115,7 +116,10 @@
                 accountCell.innerHTML = '<span>' + jsonData[i].id + '</span><input type="text" class="form-control d-none" name="account_id">';
 
                 var passwordCell = row.insertCell(3);
-                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" name="account_password">';
+                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none">';
+
+                var buttonCell = row.insertCell(4);
+                buttonCell.innerHTML = '<button type="button" class="btn btn-secondary d-none" name="random" onclick="randomPassword()">隨機密碼</button>';
             }
         }
 
@@ -131,6 +135,7 @@
             var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             var accountCell = selectedRow.cells[2];
             var passwordCell = selectedRow.cells[3];
+            var buttonCell = selectedRow.cells[4];
 
             accountCell.querySelector('span').classList.add('d-none');
             accountCell.querySelector('input').classList.remove('d-none');
@@ -138,6 +143,7 @@
 
             passwordCell.querySelector('span').classList.add('d-none');
             passwordCell.querySelector('input').classList.remove('d-none');
+            buttonCell.querySelector('button').classList.remove('d-none');
             passwordCell.querySelector('input').value = passwordCell.querySelector('span').textContent;
 
             // Hide the edit button and display the done button
@@ -158,6 +164,7 @@
             var nameCell = selectedRow.cells[1];
             var accountCell = selectedRow.cells[2];
             var passwordCell = selectedRow.cells[3];
+            var buttonCell = selectedRow.cells[4];
 
             var newName = nameCell.querySelector('input').value;
             var newAccount = accountCell.querySelector('input').value;
@@ -222,14 +229,6 @@
                     console.error(error);
                 });
             }
-
-            var variable = nameCell.querySelector('span').textContent;  // 假設這是要顯示的變數
-
-            // 取得要顯示變數值的元素
-            var resultElement = document.getElementById("result");
-
-            // 設定該元素的內容為變數的值
-            resultElement.textContent = variable;
            
 
             var radioButtons = document.getElementsByName('keyword');
@@ -249,6 +248,7 @@
 
             passwordCell.querySelector('span').classList.remove('d-none');
             passwordCell.querySelector('input').classList.add('d-none');
+            buttonCell.querySelector('button').classList.add('d-none');
 
             // Hide the "Complete" button and show the "Edit", "Add", and "Delete" buttons
             document.getElementById('editButton').classList.remove('d-none');
@@ -280,6 +280,9 @@
 
             var passwordCell = newRow.insertCell(3);
             passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_password">';
+
+            var buttonCell = newRow.insertCell(4);
+            buttonCell.innerHTML = '<button type="button" class="btn btn-secondary" name="random" onclick="randomPassword()">隨機密碼</button>';
 
             // Hide the "Edit" button and show the "Finish" button
             document.getElementById('editButton').classList.add('d-none');
@@ -318,6 +321,19 @@
             document.getElementById('addButton').classList.remove('d-none');
             document.getElementById('deleteButton').classList.remove('d-none');
             document.getElementById('saveButton').classList.add('d-none');
+        }
+
+        function randomPassword(){
+            var variable = "我成功執行了";  // 假設這是要顯示的變數
+
+            // 取得要顯示變數值的元素
+            var resultElement = document.getElementById("result");
+
+            // 設定該元素的內容為變數的值
+            resultElement.textContent = variable;
+            var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
+            var passwordCell = selectedRow.cells[3];
+            passwordCell.querySelector('input').value = "{{random_password}}";
         }
     </script>
 </body>
