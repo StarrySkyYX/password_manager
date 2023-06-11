@@ -324,7 +324,7 @@
         }
 
         function randomPassword(){
-            var variable = "我成功執行了";  // 假設這是要顯示的變數
+            // var variable = "我成功執行了";  // 假設這是要顯示的變數
             // var name = "random"
 
             fetch('/websites/random_password', {
@@ -335,10 +335,10 @@
                 // body: JSON.stringify({ name: name })
             });
             // 取得要顯示變數值的元素
-            var resultElement = document.getElementById("result");
+            // var resultElement = document.getElementById("result");
 
             // 設定該元素的內容為變數的值
-            resultElement.textContent = variable;
+            // resultElement.textContent = variable;
             var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             var passwordCell = selectedRow.cells[3];
             passwordCell.querySelector('input').value = "{{random_password}}";
