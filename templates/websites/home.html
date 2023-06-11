@@ -88,6 +88,11 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            {% if result %}
+            $('#password').text('{{ result }}');
+            {% endif %}
+        });
         var radioButtonStatus = false;
         var edit = false;
         var add = false;
@@ -116,7 +121,7 @@
                 accountCell.innerHTML = '<span>' + jsonData[i].id + '</span><input type="text" class="form-control d-none" name="account_id">';
 
                 var passwordCell = row.insertCell(3);
-                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none">';
+                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" id="password">';
 
                 var buttonCell = row.insertCell(4);
                 buttonCell.innerHTML = '<button type="button" class="btn btn-secondary d-none" name="random" onclick="randomPassword()">隨機密碼</button>';
@@ -279,10 +284,10 @@
             accountCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_id">';
 
             var passwordCell = newRow.insertCell(3);
-            passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_password">';
+            passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_password" id="password">';
 
             var buttonCell = newRow.insertCell(4);
-            buttonCell.innerHTML = '<button type="button" class="btn btn-secondary" name="random" onclick="randomPassword()">隨機密碼</button>';
+            buttonCell.innerHTML = '<button type="button" class="btn btn-secondary" name="random">隨機密碼</button>';
 
             // Hide the "Edit" button and show the "Finish" button
             document.getElementById('editButton').classList.add('d-none');
@@ -323,26 +328,26 @@
             document.getElementById('saveButton').classList.add('d-none');
         }
 
-        function randomPassword(){
-            var variable = "我成功執行了";  // 假設這是要顯示的變數
-            var name = "random"
+        // function randomPassword(){
+        //     var variable = "我成功執行了";  // 假設這是要顯示的變數
+        //     var name = "random"
 
-            fetch('/websites/random_password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: name })
-            });
-            // 取得要顯示變數值的元素
-            var resultElement = document.getElementById("result");
+        //     fetch('/websites/random_password', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({ name: name })
+        //     });
+        //     // 取得要顯示變數值的元素
+        //     var resultElement = document.getElementById("result");
 
-            // 設定該元素的內容為變數的值
-            resultElement.textContent = variable;
-            var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
-            var passwordCell = selectedRow.cells[3];
-            passwordCell.querySelector('input').value = "{{random_password}}";
-        }
+        //     // 設定該元素的內容為變數的值
+        //     resultElement.textContent = variable;
+        //     var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
+        //     var passwordCell = selectedRow.cells[3];
+        //     passwordCell.querySelector('input').value = "{{random_password}}";
+        // }
     </script>
 </body>
 </html>
