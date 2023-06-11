@@ -1,4 +1,6 @@
 import sqlite3
+import string
+import random
 
 class User:
     def __init__(self,user_mail):
@@ -143,3 +145,12 @@ class User:
                 "password":row_tuple[2]
                                     })
             return result
+    @staticmethod  
+    def random_password():
+        """Randomly generate a password.
+        :param length: The length of the password.
+        :param characters: Store all available characters.
+        """
+        length=13
+        characters = string.asciiletters + string.digits + "."
+        return ''.join(random.choice(characters) for _ in range(length))
