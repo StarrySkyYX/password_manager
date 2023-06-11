@@ -88,11 +88,6 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            {% if result %}
-            $('#password').text('{{ result }}');
-            {% endif %}
-        });
         var radioButtonStatus = false;
         var edit = false;
         var add = false;
@@ -328,26 +323,26 @@
             document.getElementById('saveButton').classList.add('d-none');
         }
 
-        // function randomPassword(){
-        //     var variable = "我成功執行了";  // 假設這是要顯示的變數
-        //     var name = "random"
+        function randomPassword(){
+            var variable = "我成功執行了";  // 假設這是要顯示的變數
+            // var name = "random"
 
-        //     fetch('/websites/random_password', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({ name: name })
-        //     });
-        //     // 取得要顯示變數值的元素
-        //     var resultElement = document.getElementById("result");
+            fetch('/websites/random_password', {
+                method: 'POST',
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                // body: JSON.stringify({ name: name })
+            });
+            // 取得要顯示變數值的元素
+            var resultElement = document.getElementById("result");
 
-        //     // 設定該元素的內容為變數的值
-        //     resultElement.textContent = variable;
-        //     var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
-        //     var passwordCell = selectedRow.cells[3];
-        //     passwordCell.querySelector('input').value = "{{random_password}}";
-        // }
+            // 設定該元素的內容為變數的值
+            resultElement.textContent = variable;
+            var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
+            var passwordCell = selectedRow.cells[3];
+            passwordCell.querySelector('input').value = "{{random_password}}";
+        }
     </script>
 </body>
 </html>
