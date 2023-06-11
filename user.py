@@ -152,5 +152,7 @@ class User:
         :param characters: Store all available characters.
         """
         length=13
-        characters = string.asciiletters + string.digits + "."
-        return ''.join(random.choice(characters) for _ in range(length))
+        result=[]
+        characters = string.ascii_letters + string.digits + '.'
+        result.append({"random_password":''.join(random.choice(characters) for _ in range(length))})
+        return result
