@@ -80,6 +80,7 @@ def delete():
     if request.method=="POST":
         user_agent=request.headers.get('User-Agent')
         login_user[user_agent].delete(request.json.get('account_name'))
+
     return render_template("/websites/home.html", user_info=User.load(login_user[user_agent].name))
     
 @app.route('/websites/add', methods=['POST'])   
@@ -98,14 +99,12 @@ def edit():
         login_user[user_agent].edit(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
     return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
 
-
-# 這邊是茹傳給我的，可是好像有錯
-# @staticmethod
-# def random_password(length):
-#     # characters儲存所有可用字符，.ascii_letters:大小寫字母；.digits:數字
-#     characters = string.asciiletters + string.digits + "."
-#     return ''.join(random.choice(characters) for  in range(length))
-    
-
+@app.route('/websites/random_password', methods=['POST']):
+def random_password():
+    '''Handle user requests to random a password.'''
+    if  request.method=="POST":
+        return render_template('/websites/home.html',User.random_password())
+        
+        
 if __name__ == '__main__':
     app.run(debug=True)
