@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 import sys
+from flask import jsonify
 from user import User
 
 app = Flask(__name__)
@@ -99,11 +100,13 @@ def edit():
         login_user[user_agent].edit(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
     return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
 
-@app.route('/websites/random_password', methods=['POST'])
-def random_password():
+@app.route('/websites/generate_random_password', methods=['POST'])
+def generate_random_password():
     if request.method=="POST":
         random_password=User.random_password()
-        return render_template('/websites/home.html',random_password=random_password)
+        password_value = random_password[0]["random_password"]
+        print(password_value)
+        return jsonify(random_password=password_value)
 
 if __name__ == '__main__':
     app.run(debug=True)
