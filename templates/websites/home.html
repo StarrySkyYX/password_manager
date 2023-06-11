@@ -282,7 +282,7 @@
             passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_password" id="password">';
 
             var buttonCell = newRow.insertCell(4);
-            buttonCell.innerHTML = '<button type="button" class="btn btn-secondary" name="random">隨機密碼</button>';
+            buttonCell.innerHTML = '<button type="button" class="btn btn-secondary" name="random" onclick="randomPassword()">隨機密碼</button>';
 
             // Hide the "Edit" button and show the "Finish" button
             document.getElementById('editButton').classList.add('d-none');
