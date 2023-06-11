@@ -88,6 +88,22 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            $(document).on("click", ".password", function() {
+                $(".random_password_input").val("我執行了");
+                $.ajax({
+                url: "/websites/generate_random_password",
+                type: "POST",
+                success: function(response) {
+                    var password = response.random_password;
+                    $(".random_password_input").val(password);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+                });
+            });
+        });
         var radioButtonStatus = false;
         var edit = false;
         var add = false;
@@ -116,10 +132,10 @@
                 accountCell.innerHTML = '<span>' + jsonData[i].id + '</span><input type="text" class="form-control d-none" name="account_id">';
 
                 var passwordCell = row.insertCell(3);
-                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none" id="password">';
+                passwordCell.innerHTML = '<span>' + jsonData[i].password + '</span><input type="text" class="form-control d-none random_password_input">';
 
                 var buttonCell = row.insertCell(4);
-                buttonCell.innerHTML = '<button type="button" class="btn btn-secondary d-none" name="random" onclick="randomPassword()">隨機密碼</button>';
+                buttonCell.innerHTML = '<button type="button" class="btn btn-secondary d-none password" name="random">隨機密碼</button>';
             }
         }
 
@@ -279,10 +295,10 @@
             accountCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_id">';
 
             var passwordCell = newRow.insertCell(3);
-            passwordCell.innerHTML = '<span></span><input type="text" class="form-control" name="account_password" id="password">';
+            passwordCell.innerHTML = '<span></span><input type="text" class="form-control random_password_input" name="account_password">';
 
             var buttonCell = newRow.insertCell(4);
-            buttonCell.innerHTML = '<button type="button" class="btn btn-secondary" name="random" onclick="randomPassword()">隨機密碼</button>';
+            buttonCell.innerHTML = '<button type="button" class="btn btn-secondary password" name="random">隨機密碼</button>';
 
             // Hide the "Edit" button and show the "Finish" button
             document.getElementById('editButton').classList.add('d-none');
@@ -323,26 +339,34 @@
             document.getElementById('saveButton').classList.add('d-none');
         }
 
-        function randomPassword(){
-            // var variable = "我成功執行了";  // 假設這是要顯示的變數
-            // var name = "random"
+        // function randomPassword(){
+        //     // var variable = "我成功執行了";  // 假設這是要顯示的變數
+        //     // var name = "random"
 
-            fetch('/websites/random_password', {
-                method: 'POST',
-                // headers: {
-                //     'Content-Type': 'application/json'
-                // },
-                // body: JSON.stringify({ name: name })
-            });
-            // 取得要顯示變數值的元素
-            // var resultElement = document.getElementById("result");
+        //     fetch('/websites/generate_random_password', {
+        //     method: 'POST'
+        //     })
+        //     .then(response => response.text())
+        //     .then(randomPassword => {
+        //         // 在獲取到 randomPassword 後執行相應的操作
+        //         console.log(randomPassword);
+        //         // 其他程式邏輯...
+        //     })
+        //     .catch(error => {
+        //         // 處理錯誤
+        //         console.error(error);
+        //     });
 
-            // 設定該元素的內容為變數的值
-            // resultElement.textContent = variable;
-            var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
-            var passwordCell = selectedRow.cells[3];
-            passwordCell.querySelector('input').value = "{{ random_password | tojson }}";
-        }
+            
+        //     var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
+        //     var passwordCell = selectedRow.cells[3];
+        //     passwordCell.querySelector('input').value = "我成功執行了" + "{{random_password}}";
+
+        //     // var randomPassword = "{{ random_password }}";
+
+        //     // // 在網頁中顯示 random_password
+        //     // document.getElementById("password").innerHTML = randomPassword;
+        // }
     </script>
 </body>
 </html>
