@@ -341,7 +341,7 @@
             // resultElement.textContent = variable;
             var selectedRow = document.querySelector('input[name="keyword"]:checked').parentNode.parentNode;
             var passwordCell = selectedRow.cells[3];
-            passwordCell.querySelector('input').value = "{{random_password}}";
+            passwordCell.querySelector('input').value = "{{ random_password | tojson }}";
         }
     </script>
 </body>
