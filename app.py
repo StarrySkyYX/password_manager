@@ -99,12 +99,11 @@ def edit():
         login_user[user_agent].edit(request.json.get('account_name'),request.json.get('account_id'),request.json.get('account_password'))
     return render_template('/websites/home.html', user_info=User.load(login_user[user_agent].name))
 
-@app.route('/websites/random_password', methods=['POST']):
+@app.route('/websites/random_password', methods=['POST'])
 def random_password():
-    '''Handle user requests to random a password.'''
-    if  request.method=="POST":
-        return render_template('/websites/home.html',User.random_password())
-        
-        
+    if request.method=="POST":
+        random_password=User.random_password()
+        return render_template('/websites/home.html',random_password=random_password)
+
 if __name__ == '__main__':
     app.run(debug=True)
