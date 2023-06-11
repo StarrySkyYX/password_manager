@@ -325,9 +325,14 @@
 
         function randomPassword(){
             var variable = "我成功執行了";  // 假設這是要顯示的變數
+            var name = "random"
 
-            fetch('/website/random_password', {
+            fetch('/websites/random_password', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'String'
+                },
+                body: JSON.stringify({ name: name })
             });
             // 取得要顯示變數值的元素
             var resultElement = document.getElementById("result");
