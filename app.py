@@ -22,7 +22,6 @@ def login():
         user_mail=request.form['user_mail']
         password=request.form['password']
         if User.check_login(user_mail,password):
-            # 詢問ChatGPT，因為不知道怎麼區分不同使用者
             user_agent= request.headers.get('User-Agent')
             login_user[user_agent]=User(user_mail)
             return render_template('/websites/home.html',
@@ -35,7 +34,6 @@ def login():
 def register():
     '''Handle the registration function.'''
     error=""
-    # 一開始if語句嵌套過多層，可讀性差，詢問chatGPT解決辦法，他提議以elif來改善
     if request.method=="POST":
         user_mail = request.form['user_mail']
         password = request.form['password']
@@ -68,7 +66,6 @@ def home():
     '''Load user's home page.'''
     user_agent= request.headers.get('User-Agent')
     if request.method=="POST":
-         # 因不清楚Button在request.form所儲存的key-value，因此向chatGPT詢問 
         if 'button_logout' in request.form:
             del login_user[user_agent]
             sys.exit()
